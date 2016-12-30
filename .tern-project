@@ -1,0 +1,10 @@
+{
+    "libs": ["browser", "ecmascript"],
+    "loadEagerly": [],
+    "plugins":{
+        "doc_comment": {"strong":true},
+        "es_modules": {},
+        "modules": {},
+        "node": {}
+    }
+}

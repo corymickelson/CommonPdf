@@ -1,0 +1,25 @@
+{
+  "name": "commonpdf",
+  "version": "0.0.1",
+  "description": "Pdf utility library",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corymickelson/CommonPdf.git"
+  },
+  "keywords": [
+    "pdf",
+    "pdftk",
+    "pdfkit",
+    "pdf2json"
+  ],
+  "author": "Cory Mickelson <mickelsoncory@gmail.com> (http://corymickelson.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/corymickelson/CommonPdf/issues"
+  },
+  "homepage": "https://github.com/corymickelson/CommonPdf#readme"
+}
