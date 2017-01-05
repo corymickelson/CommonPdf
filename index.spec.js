@@ -2,7 +2,7 @@ const test = require( 'tape' ),
 	fs = require( 'fs' ),
 	Subject = require( './src/fdf-generator' ).FDFGenerator,
 	_FillForm = require( './src/fillform' ).FillForm,
-	pdfData = require('./src/fdf-generator').PdfData,
+	pdfData = require( './src/fdf-generator' ).PdfData,
 	config = require( './config.json' )
 
 
@@ -30,22 +30,21 @@ test( 'Name, Business Name, S Corp, and Partnership', t => {
 	FDFGenerator.start()
 		.then( fdf => {
 			let FillForm = new _FillForm( fdf, '~/Documents/fw9.pdf' )
-			FillForm.write()
-				.then( pdf => {
-					return pdfData( pdf )
-				} )
-				.then( data => {
-					t.plan( fieldValues.length )
-					fieldValues.map( v => {
-						let field = data.find( x => x[ 'FieldName' ] === v.fieldname )
-						if(typeof v.fieldvalue === 'boolean') {
-							if(v.fieldvalue) t.equal(field['FieldValue'], field['FieldStateOption'])
-							else t.equal(field['FieldValue'], 0)
-						}
-						else t.equal( field[ 'FieldValue' ], v.fieldvalue )
-					} )
-				} )
-
+			return FillForm.write()
+		} )
+		.then( pdf => {
+			return pdfData( pdf )
+		} )
+		.then( data => {
+			t.plan( fieldValues.length )
+			fieldValues.map( v => {
+				let field = data.find( x => x[ 'FieldName' ] === v.fieldname )
+				if( typeof v.fieldvalue === 'boolean' ) {
+					if( v.fieldvalue ) t.equal( field[ 'FieldValue' ], field[ 'FieldStateOption' ] )
+					else t.equal( field[ 'FieldValue' ], 0 )
+				}
+				else t.equal( field[ 'FieldValue' ], v.fieldvalue )
+			} )
 		} )
 } )
 

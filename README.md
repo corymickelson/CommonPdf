@@ -5,13 +5,22 @@
 warning very early stages, not for production use.
 ***
 
-A pdftk wrapper for node.js, this project requires pdftk on your path. If using within lambda, add the following to the top of
-your index.js file. 
-```javascript
-process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin';
-process.env['LD_LIBRARY_PATH'] = process.env['LAMBDA_TASK_ROOT'] + '/bin';
-```
+CommonPdf aims to provide performant pdf operations using pdftk, pdfjam, and imagemagik
+## API
 
+This module exposes multiple endpoints wrapping various pdftk commands for use behind AWS api gateway. 
+
+### fill form
+
+### stamp
+
+Signature  stamping requires pdfkit, and pdf2json to position the signature image properly. 
+The pdf to stamp should have placeholder text areas, which will be parsed for there height, width, x, and y 
+coordinates. The image will be sized and placed according the this output, and rendered as a new pdf on a transparent b
+background. Finally the base pdf and the newly created pdf will be "stamped" to create a single new pdf
+### concat
+
+### rotate
 
 ## Run as Lambda
 
@@ -53,18 +62,9 @@ It should be possible to use the PDFtk binary and GCJ shared library located in 
 LD_LIBRARY_PATH=/path/to/libgcj.so.10 /path/to/pdftk --version
 ```
 
-## API
-
-This module exposes multiple endpoints wrapping various pdftk commands for use behind AWS api gateway. 
-
-### fill form
-
-### stamp
-
-Signature  stamping requires pdfkit, and pdf2json to position the signature image properly. 
-The pdf to stamp should have placeholder text areas, which will be parsed for there height, width, x, and y 
-coordinates. The image will be sized and placed according the this output, and rendered as a new pdf on a transparent b
-background. Finally the base pdf and the newly created pdf will be "stamped" to create a single new pdf
-### concat
-
-### rotate
+A pdftk wrapper for node.js, this project requires pdftk on your path. If using within lambda, add the following to the top of
+your index.js file. 
+```javascript
+process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin';
+process.env['LD_LIBRARY_PATH'] = process.env['LAMBDA_TASK_ROOT'] + '/bin';
+```

@@ -1,0 +1,26 @@
+<template>
+    <style>
+
+    </style>
+    <div class="view-container">
+
+    </div>
+</template>
+<script>
+    const ViewPortalDocument = document.currentScript.ownerDocument
+    class ViewPortal extends HtmlElement {
+        createdCallback() {}
+        attachedCallback() {}
+        detachedCallback() {}
+        attributeChangedCallback(name, previous, current) {}
+        static init() {
+            if(!isRegistered('view-portal')) document.registerElement('view-portal', ViewPortal)
+        }
+    }
+
+    ViewPortal.init()
+
+    function isRegistered(tagName) {
+	    return document.createElement(tagName).constructor !== HTMLElement
+    }
+</script>
