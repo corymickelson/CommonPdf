@@ -1,11 +1,4 @@
-class CommonPdf {
-	/**
-	 *
-	 * @param {String} output - write files to this location
-	 */
-	constructor( { output } ) {
-
-	}
-}
-
-module.exports.CommonPdf = CommonPdf
+module.exports.Concat = require( './src/concat' ).Concat
+module.exports.Rotate = require( './src/rotate' ).Rotate
+module.exports.Stamp = require( './src/stamp' ).Stamp
+module.exports.FillForm = require( './src/fillform' ).FillForm

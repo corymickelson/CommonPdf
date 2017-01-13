@@ -17,3 +17,4 @@ class Rotate {
 
 	write() {}
 }
+exports.Rotate = Rotate

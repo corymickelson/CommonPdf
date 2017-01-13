@@ -30,8 +30,6 @@
   },
   "dependencies": {
     "aws-sdk": "^2.7.14",
-    "hummus": "1.0.67",
-    "pdf2json": "^1.1.7",
     "pdfkit": "^0.8.0",
     "webcomponents.js": "0.7.23"
   }
