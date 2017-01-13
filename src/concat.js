@@ -9,12 +9,14 @@ class Concat {
 	/**
 	 *
 	 * @param {Array<String>} docs
+	 * @param {String} outfile
 	 */
-	constructor( ...docs ) {
+	constructor( docs, outfile = '/tmp/out.pdf' ) {
 		this.docs = docs.map( doc => {
+			//make sure doc exists
 			return doc
 		} )
-		this.out = '/tmp/out.pdf'
+		this.out = outfile || '/tmp/out.pdf'
 	}
 
 	/**

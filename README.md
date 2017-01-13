@@ -5,22 +5,49 @@
 warning very early stages, not for production use.
 ***
 
-CommonPdf aims to provide performant pdf operations using pdftk, pdfjam, and imagemagik
+CommonPdf wraps a small subset of **pdftk** aiming to provide performant pdf operations in node.js applications.
+
 ## API
 
-This module exposes multiple endpoints wrapping various pdftk commands for use behind AWS api gateway. 
+- concat
+- fillform
+- rotate
+- stamp
 
-### fill form
+## Getting Started
+- Install [pdftk](https://www.pdflabs.com/tools/pdftk-server/) and put on your path
+- Install CommonPdf `npm i -S commonpdf`
+- Import only what you need
+```javascript 
+    const Rotate = require( 'commonpdf' ).Rotate,
+        Concat = require( 'commonpdf' ).Concat,
+        FillForm = require( 'commonpdf' ).FillForm,
+        Stamp = requir( 'commonpdf' ).Stamp
+```
+## Basic Usage
+Concat:
+ 
+Simply takes and array of pdf's (file paths) and combines them together into a single pdf. The resulting pdf
+will be in the same order as the input array. 
+Concat exposes a single method `write()`. Concat.write() returns a promise passing the array of pdf file paths to 
+`pdftk concat`.
+```javascript
+const Concat = require( 'commonpdf' ).Concat,
+    pdfs = ['fileA.pdf', 'fileB.pdf']
+   
+new Concat(pdfs)
+    .write()
+    .then(outfilePath => {
+    	// do something 
+    })
+```
 
-### stamp
+FillForm:
 
-Signature  stamping requires pdfkit, and pdf2json to position the signature image properly. 
-The pdf to stamp should have placeholder text areas, which will be parsed for there height, width, x, and y 
-coordinates. The image will be sized and placed according the this output, and rendered as a new pdf on a transparent b
-background. Finally the base pdf and the newly created pdf will be "stamped" to create a single new pdf
-### concat
+Stamp:
 
-### rotate
+Rotate:
+
 
 ## Run as Lambda
 
@@ -33,7 +60,6 @@ Create a zip with
 Then, simply upload this ZIP to AWS Lambda
 
 ## How it Works
-Requires node.js ^6.9.1.
 AWS Lambda supports binary dependencies by allowing them to be included in uploaded ZIP files. However, because Amazon Linux does not support PDFtk or GCJ, PDFtk was built from source in CentOS, a close relative of Amazon Linux. I spun up a CentOS 6 machine in EC2 and followed the instructions on the [PDFtk website](https://www.pdflabs.com/docs/install-pdftk-on-redhat-or-centos/) to build PDFtk from source. 
 
 ```
@@ -62,9 +88,3 @@ It should be possible to use the PDFtk binary and GCJ shared library located in 
 LD_LIBRARY_PATH=/path/to/libgcj.so.10 /path/to/pdftk --version
 ```
 
-A pdftk wrapper for node.js, this project requires pdftk on your path. If using within lambda, add the following to the top of
-your index.js file. 
-```javascript
-process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin';
-process.env['LD_LIBRARY_PATH'] = process.env['LAMBDA_TASK_ROOT'] + '/bin';
-```
