@@ -3,7 +3,8 @@
  */
 const exec = require( 'child_process' ).exec,
 	fs = require( 'fs' ),
-	PDFDocument = require( 'pdfkit' )
+	PDFDocument = require( 'pdfkit' ),
+	Concat = require( './concat' ).Concat
 
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
@@ -24,21 +25,20 @@ class Stamp {
 	constructor( pdf ) {
 		//validate input
 		this.pdf = pdf
-
+		this.target = null
 		//assign properties to this
 	}
 
 	/**
 	 * @desc Generates a new pdf with image at the provided coordinates and dimensions
 	 * @param {String} img - data url
-	 * @param {Number} page - target page
 	 * @param {Number} width
 	 * @param {Number} height
 	 * @param {Number} x
 	 * @param {Number} y
 	 * @return {Promise<String>} -
 	 */
-	_stamp( img, page, { width, height, x, y } ) {
+	_stamp( img, { width, height, x, y } ) {
 		return new Promise( ( fulfill, reject ) => {
 			let out = '/tmp/placeholder.pdf',
 				placeholderStampPdf = '/tmp/placeholderStamped.pdf',
@@ -53,24 +53,56 @@ class Stamp {
 		} )
 	}
 
-	apply( img, page, { width, height, x, y } ) {
+	_burst() {
 		return new Promise( ( fulfill, reject ) => {
-			if(!page) reject('Page number required.')
+			let command = `pdftk ${this.pdf} burst && find -name "pg_*.pdf"`
+			exec( command, ( error, stdin, stderr ) => {
+				if( error || stderr ) reject( error )
+				else {
+					fulfill( stdin.split( '\n' )
+						.filter( x => x.length > 0 ) )
+				}
+			} )
 		} )
 	}
 
-	/**
-	 *
-	 * @private
-	 * @returns {Promise<Array<String>>} - split pdf into individual pages, returns file paths
-	 */
-	_page() {
+	apply( img, page, { width, height, x, y } ) {
+		let pages;
 		return new Promise( ( fulfill, reject ) => {
-			const command = ``
-			exec(command, (err, stdout, stderr) => {
-
-			})
+			if( !page || typeof page !== 'number' ) reject( 'Page number required.' )
+			this._burst()
+				.then( burstPages => {
+					pages = burstPages
+					let pageString = page.toString()
+					if( pageString.length < 4 ) pageString = `0${page}`
+					this.target = pages.find( x => x.indexOf( pageString ) !== -1 )
+					Promise.resolve()
+				} )
+				.then( () => {
+					return this._stamp( img, { width, height, x, y } )
+				} )
+				.then( stampedPage => {
+					return new Concat( pages.reduce( ( accum, item, index ) => {
+						let pageIndex = Stamp.pageIndex( item )
+						accum[ pageIndex ] = pageIndex === Stamp.pageIndex( this.target ) ? stampedPage : item
+						return accum
+					} ) ).write()
+				} )
+				.then( final => {
+					fulfill( final )
+				} )
+				.catch( e => {
+					reject( e )
+				} )
 		} )
+	}
+
+	static pageIndex( page ) {
+		let subject = page.substr( 5, 4 )
+		while( subject[ 0 ] === '0' ) {
+			subject = subject.substr( 1 )
+		}
+		return parseInt( subject ) - 1
 	}
 
 }
