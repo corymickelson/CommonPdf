@@ -4,5 +4,5 @@ node_modules
 *.fdf
 *.pdf
 config.json
-
-test-data/
+.vscode
+typings

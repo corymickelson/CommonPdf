@@ -4,7 +4,7 @@
   "description": "Pdf utility library",
   "main": "index.js",
   "scripts": {
-    "test": "tape ./src/**.spec.js",
+    "test": "tape ./src/**.spec.js | tap-spec",
     "lint": "eslint .",
     "validate": "npm ls"
   },
@@ -28,12 +28,11 @@
     "eslint-plugin-jsdoc": "^2.4.0",
     "precommit-hook": "3.0.0",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "webcomponents.js": "0.7.23"
   },
   "dependencies": {
-    "aws-sdk": "^2.7.14",
-    "pdfkit": "^0.8.0",
-    "webcomponents.js": "0.7.23"
+    "pdfkit": "^0.8.0"
   },
   "pre-commit": [
     "test",
