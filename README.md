@@ -29,11 +29,13 @@ All classes expose a write() method. The write methods returns a promise. The pr
 
 
 ####Concat:
+
+Concat accepts an array of pdf file paths. Options: output file location
 ```javascript
 const Concat = require( 'commonpdf' ).Concat,
-    pdfs = ['fileA.pdf', 'fileB.pdf']
-   
-new Concat(pdfs)
+    pdfs = ['fileA.pdf', 'fileB.pdf'],
+    opts = '/outfile.pdf' 
+new Concat(pdfs, opts /*optional*/)
     .write()
     .then(outfilePath => {
     	// do something 
@@ -92,6 +94,14 @@ new Rotate(pdf, pageNumber, config)
 
 ```
 
+##Todo
+
+ - document view portal (web component)
+ - document code
+ - contributor details
+ - error handling
+ - expand tested pdf's
+ 
 ## Run as Lambda
 
 Create a zip with

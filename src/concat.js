@@ -3,8 +3,11 @@
  */
 const fs = require( 'fs' ),
 	exec = require( 'child_process' ).exec,
-	path = require( 'path' )
+	join = require('path').join
 
+/**
+ * @class Concat
+ */
 class Concat {
 	/**
 	 *
@@ -13,7 +16,7 @@ class Concat {
 	 */
 	constructor( docs, outfile = '/tmp/out.pdf' ) {
 		this.docs = docs.map( doc => {
-			//make sure doc exists
+			if(!fs.existsSync(doc)) throw new Error(`File not found ${doc}`)
 			return doc
 		} )
 		this.out = outfile || '/tmp/out.pdf'
@@ -27,8 +30,7 @@ class Concat {
 		return new Promise( ( fulfill, reject ) => {
 			let command = `pdftk ${this.docs.join( ' ' )} cat output ${this.out}`
 			exec( command, ( error, stdout, stderr ) => {
-				if( error || stderr ) reject( error )
-				else fulfill( this.out )
+				error || stderr ? reject(error) : fulfill(this.out)
 			} )
 		} )
 	}
