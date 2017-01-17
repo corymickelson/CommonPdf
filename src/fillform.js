@@ -1,7 +1,6 @@
-'use strict'
-
 const fs = require( 'fs' ),
-	exec = require( 'child_process' ).exec
+	exec = require( 'child_process' ).exec,
+	join = require('path').join
 
 class FillForm {
 	/**
@@ -11,7 +10,7 @@ class FillForm {
 	 */
 	constructor( fdfFilePath, pdfFilePath ) {
 		this.fdf = fdfFilePath
-		this.pdf = pdfFilePath
+		this.pdf = join(__dirname, pdfFilePath)
 		this.out = `${this.pdf.substr( 0, this.pdf.length - 4 )}.fill.pdf`
 	}
 

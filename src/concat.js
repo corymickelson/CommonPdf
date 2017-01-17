@@ -8,8 +8,8 @@ const fs = require( 'fs' ),
 class Concat {
 	/**
 	 *
-	 * @param {Array<String>} docs
-	 * @param {String} outfile
+	 * @param {Array<String>} docs - document file paths
+	 * @param {String} outfile - out file path
 	 */
 	constructor( docs, outfile = '/tmp/out.pdf' ) {
 		this.docs = docs.map( doc => {

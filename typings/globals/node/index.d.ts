@@ -2451,10 +2451,10 @@ declare module "fs" {
         /** Constant for fs.open(). Flag indicating to open a file for read-only access. */
         export const O_RDONLY: number;
 
-        /** Constant for fs.open(). Flag indicating to open a file for write-only access. */
+        /** Constant for fs.open(). Flag indicating to open a file for _write-only access. */
         export const O_WRONLY: number;
 
-        /** Constant for fs.open(). Flag indicating to open a file for read-write access. */
+        /** Constant for fs.open(). Flag indicating to open a file for read-_write access. */
         export const O_RDWR: number;
 
         /** Constant for fs.open(). Flag indicating to create the file if it does not already exist. */
@@ -2466,7 +2466,7 @@ declare module "fs" {
         /** Constant for fs.open(). Flag indicating that if path identifies a terminal device, opening the path shall not cause that terminal to become the controlling terminal for the process (if the process does not already have one). */
         export const O_NOCTTY: number;
 
-        /** Constant for fs.open(). Flag indicating that if the file exists and is a regular file, and the file is opened successfully for write access, its length shall be truncated to zero. */
+        /** Constant for fs.open(). Flag indicating that if the file exists and is a regular file, and the file is opened successfully for _write access, its length shall be truncated to zero. */
         export const O_TRUNC: number;
 
         /** Constant for fs.open(). Flag indicating that data will be appended to the end of the file. */

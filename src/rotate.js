@@ -6,7 +6,7 @@ const exec = require( 'child_process' ).exec
 class Rotate {
 	/**
 	 *
-	 * @param {String} source
+	 * @param {String} source - pdf file path
 	 * @param {Number} targetFile - page number ( 1 based page number )
 	 * @param {String} out - output file path
 	 * @param {String} direction - north, south, east, west
@@ -19,6 +19,12 @@ class Rotate {
 		this.direction = direction || 'north'
 	}
 
+	/**
+	 *
+	 * @param {Number} target - target page
+	 * @returns {Promise<String>} - a substring of the rotation command
+	 * @private
+	 */
 	_cat( target ) {
 		return new Promise( ( fulfill, reject ) => {
 			if( target === 1 ) fulfill( `1${this.direction} 2-end` )
@@ -51,7 +57,6 @@ class Rotate {
 					} )
 				} )
 		} )
-
 	}
 }
 exports.Rotate = Rotate

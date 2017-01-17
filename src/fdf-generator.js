@@ -12,13 +12,13 @@ class FDFGenerator {
 		this.footer = '] >> >>\n endobj\n trailer\n <</Root 1 0 R>>\n %%EOF'
 		this.pdf = !fs.existsSync( join( __dirname, pdf ) ) ? //eslint-disable-line
 			new Error( 'pdf file not found' ) :
-			pdf
+			join(__dirname, pdf)
 		this.values = values.length === 0 ?
 			new Error( 'values must not be null' ) :
 			values
 	}
 
-	start() {
+	write() {
 		return new Promise( ( fulfill, reject ) => {
 			this._checkAg()
 				.then( ag => {
@@ -30,7 +30,7 @@ class FDFGenerator {
 					return this._assignments( this.values )
 				} )
 				.then( body => {
-					return this.write( body )
+					return this._write( body )
 				} )
 				.then( file => {
 					fulfill( file )
@@ -54,7 +54,7 @@ class FDFGenerator {
 	 * @param {Array<{fieldname:String, fieldvalue:String}>} fdfMap - field name / value map
 	 * @returns {Promise<String>} - tmp file fdf
 	 */
-	write( fdfMap ) {
+	_write( fdfMap ) {
 		return new Promise( ( fulfill, reject ) => {
 			fs.writeFile( '/tmp/fillform.fdf', [ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ].join( '\n' ),
 				err => {

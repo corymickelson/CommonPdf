@@ -3,5 +3,6 @@ node_modules
 *.txt
 *.fdf
 *.pdf
+config.json
 
 test-data/

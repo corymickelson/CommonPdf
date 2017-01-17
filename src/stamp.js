@@ -32,10 +32,10 @@ class Stamp {
 	/**
 	 * @desc Generates a new pdf with image at the provided coordinates and dimensions
 	 * @param {String} img - data url
-	 * @param {Number} width
-	 * @param {Number} height
-	 * @param {Number} x
-	 * @param {Number} y
+	 * @param {Number} width - image width
+	 * @param {Number} height - image height
+	 * @param {Number} x - page x coordinate
+	 * @param {Number} y - page y coordinate
 	 * @return {Promise<String>} -
 	 */
 	_stamp( img, { width, height, x, y } ) {
@@ -66,7 +66,7 @@ class Stamp {
 		} )
 	}
 
-	apply( img, page, { width, height, x, y } ) {
+	write( img, page, { width, height, x, y } ) {
 		let pages;
 		return new Promise( ( fulfill, reject ) => {
 			if( !page || typeof page !== 'number' ) reject( 'Page number required.' )

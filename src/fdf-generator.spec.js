@@ -2,8 +2,7 @@ const test = require( 'tape' ),
 	fs = require( 'fs' ),
 	Subject = require( './fdf-generator' ).FDFGenerator,
 	_FillForm = require( './fillform' ).FillForm,
-	pdfData = require('./fdf-generator').PdfData,
-	config = require( './../config.json' )
+	pdfData = require('./fdf-generator').PdfData
 
 
 test( 'Name, Business Name, S Corp, and Partnership', t => {
@@ -24,12 +23,12 @@ test( 'Name, Business Name, S Corp, and Partnership', t => {
 				fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]',
 				fieldvalue: true
 			} ],
-		FDFGenerator = new Subject( '../../Documents/fw9.pdf', fieldValues )
+		FDFGenerator = new Subject( '../test-data/fw9.pdf', fieldValues )
 
 
-	FDFGenerator.start()
+	FDFGenerator.write()
 		.then( fdf => {
-			let FillForm = new _FillForm( fdf, '~/Documents/fw9.pdf' )
+			let FillForm = new _FillForm( fdf, '../test-data/fw9.pdf' )
 			FillForm.write()
 				.then( pdf => {
 					return pdfData( pdf )

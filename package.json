@@ -4,7 +4,9 @@
   "description": "Pdf utility library",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "tape ./src/**.spec.js",
+    "lint": "eslint .",
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
@@ -13,8 +15,7 @@
   "keywords": [
     "pdf",
     "pdftk",
-    "pdfkit",
-    "pdf2json"
+    "pdfkit"
   ],
   "author": "Cory Mickelson <mickelsoncory@gmail.com> (http://corymickelson.github.io/)",
   "license": "MIT",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "eslint": "^3.12.2",
     "eslint-plugin-jsdoc": "^2.4.0",
+    "precommit-hook": "3.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
   },
@@ -32,5 +34,9 @@
     "aws-sdk": "^2.7.14",
     "pdfkit": "^0.8.0",
     "webcomponents.js": "0.7.23"
-  }
+  },
+  "pre-commit": [
+    "test",
+    "lint"
+  ]
 }

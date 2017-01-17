@@ -25,12 +25,10 @@ CommonPdf wraps a small subset of **pdftk** aiming to provide performant pdf ope
         Stamp = requir( 'commonpdf' ).Stamp
 ```
 ## Basic Usage
-Concat:
- 
-Simply takes and array of pdf's (file paths) and combines them together into a single pdf. The resulting pdf
-will be in the same order as the input array. 
-Concat exposes a single method `write()`. Concat.write() returns a promise passing the array of pdf file paths to 
-`pdftk concat`.
+All classes expose a write() method. The write methods returns a promise. The promise contains the path to the newly written file.
+
+
+####Concat:
 ```javascript
 const Concat = require( 'commonpdf' ).Concat,
     pdfs = ['fileA.pdf', 'fileB.pdf']
@@ -42,12 +40,57 @@ new Concat(pdfs)
     })
 ```
 
-FillForm:
+####FillForm:
 
-Stamp:
+FillForm requires FdfGenerator, this class will be briefly covered here, for more info look at fdf-generator.spec
+```javascript
+const FillForm = require('commonpdf').FillForm,
+    FdfGenerator = require('commonpdf').FDFGenerator,
+    fdfParameters = [
+    	{fieldname:'acro form field name', fieldvalue:'a string value'},
+    	{fieldname:'a button', fieldvalue:true/false}
+    ],
+    pdfFilePath = '/path/to/target.pdf'
 
-Rotate:
+const fdf = new FdfGenerator(pdfFilePath, fdfParameters)
 
+fdf.write()
+    .then(fdfFile => {
+    	return new FillForm(fdfFile, pdfFilePath).write()
+    })
+    .then(outFilePath => {
+    	// do something will filled pdf form
+    })
+```
+####Stamp:
+
+```javascript
+const Stamp = require('commonpdf').Stamp,
+    img = 'data:image/png;base64,.....',
+    pdf = 'path/to/pdf',
+    pageNumber = 1,
+    dimensions = {width:100, height:100, x:100, y:100}
+ 
+new Stamp(pdf).write(img, pageNumber, dimensions)    
+    .then(outfile => {
+    	// do something with newly stamped pdf 
+    })
+```
+
+####Rotate:
+```javascript
+const Rotate = require('commonpdf').Rotate,
+    pdf = 'pdf/file/path',
+    pageNumber = 2,
+    config = {direction:'east'}
+    
+new Rotate(pdf, pageNumber, config)
+    .write()
+    .then(outfile => {
+    	// do something
+    })
+
+```
 
 ## Run as Lambda
 
@@ -86,5 +129,17 @@ It should be possible to use the PDFtk binary and GCJ shared library located in 
 
 ```
 LD_LIBRARY_PATH=/path/to/libgcj.so.10 /path/to/pdftk --version
+```
+
+```javascript 
+let exec = require('child_process').exec;
+
+// Set the PATH and LD_LIBRARY_PATH environment variables.
+process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'] + '/bin';
+process.env['LD_LIBRARY_PATH'] = process.env['LAMBDA_TASK_ROOT'] + '/bin';
+
+exports.handler = function handler (event, context) {
+	exec('pdftk --version', context.done);
+};
 ```
 
