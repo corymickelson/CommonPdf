@@ -1,6 +1,7 @@
 /**
  * Created by cory on 12/30/16.
  */
+'use strict'
 const exec = require( 'child_process' ).exec,
 	fs = require( 'fs' ),
 	PDFDocument = require( 'pdfkit' ),

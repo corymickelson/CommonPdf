@@ -1,3 +1,4 @@
+'use strict'
 const exec = require( 'child_process' ).exec,
 	join = require( 'path' ).join,
 	fs = require( 'fs' )
