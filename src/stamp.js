@@ -33,18 +33,15 @@ class Stamp {
 	/**
 	 * @desc Generates a new pdf with image at the provided coordinates and dimensions
 	 * @param {String} img - data url
-	 * @param {Number} width - image width
-	 * @param {Number} height - image height
-	 * @param {Number} x - page x coordinate
-	 * @param {Number} y - page y coordinate
+	 * @param {{x:Number, y:Number, width:Number, height:Number}} opts -
 	 * @return {Promise<String>} -
 	 */
-	_stamp( img, { width, height, x, y } ) {
+	_stamp( img, opts ) {
 		return new Promise( ( fulfill, reject ) => {
 			let out = '/tmp/placeholder.pdf',
 				placeholderStampPdf = '/tmp/placeholderStamped.pdf',
 				tmpPdf = new PDFDocument()
-			tmpPdf.image( img, x, y, { width, height } )
+			tmpPdf.image( img, opts.x, opts.y, { width: opts.width, height:opts.height } )
 			tmpPdf.pipe( fs.createWriteStream( out ) )
 			tmpPdf.end()
 			exec( `pdftk ${this.pdf} stamp ${out} output ${placeholderStampPdf}`, ( error, stdout, stderr ) => {
@@ -67,7 +64,7 @@ class Stamp {
 		} )
 	}
 
-	write( img, page, { width, height, x, y } ) {
+	write( img, page, opts ) {
 		let pages;
 		return new Promise( ( fulfill, reject ) => {
 			if( !page || typeof page !== 'number' ) reject( 'Page number required.' )
@@ -80,7 +77,7 @@ class Stamp {
 					Promise.resolve()
 				} )
 				.then( () => {
-					return this._stamp( img, { width, height, x, y } )
+					return this._stamp( img, { width: opts.width, height:opts.height, x: opts.x, y: opts.y } )
 				} )
 				.then( stampedPage => {
 					return new Concat( pages.reduce( ( accum, item, index ) => {

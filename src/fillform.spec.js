@@ -1,3 +1,4 @@
+'use strict'
 const test = require( 'tape' ),
 	fs = require( 'fs' ),
 	join = require('path').join,

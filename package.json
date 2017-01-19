@@ -1,6 +1,6 @@
 {
   "name": "commonpdf",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Pdf utility library",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/corymickelson/CommonPdf.git"
+  },
+  "engines": {
+    "node": "^4.3.2"
   },
   "keywords": [
     "pdf",

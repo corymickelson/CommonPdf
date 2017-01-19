@@ -1,6 +1,7 @@
 /**
  * Created by cory on 1/17/17.
  */
+'use strict'
 const test = require( 'tape' ),
 	Subject = require( './rotate' ).Rotate,
 	join = require( 'path' ).join,

@@ -16,7 +16,7 @@ class Concat {
 	 * @param {Array<String>} docs - document file paths
 	 * @param {String} outfile - out file path
 	 */
-	constructor( docs, outfile = '/tmp/out.pdf' ) {
+	constructor( docs, outfile ) {
 		this.docs = docs.map( doc => {
 			if(!fs.existsSync(doc)) throw new Error(`File not found ${doc}`)
 			return doc

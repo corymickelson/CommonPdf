@@ -1,6 +1,7 @@
 /**
  * Created by cory on 1/13/17.
  */
+'use strict'
 const test = require( 'tape' ),
 	join = require( 'path' ).join,
 	fs = require( 'fs' ),

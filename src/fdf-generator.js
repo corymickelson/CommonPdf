@@ -57,7 +57,13 @@ class FDFGenerator {
 	 */
 	_write( fdfMap ) {
 		return new Promise( ( fulfill, reject ) => {
-			fs.writeFile( '/tmp/fillform.fdf', [ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ].join( '\n' ),
+			let lines = [this.header]
+			fdfMap.forEach(f => {
+				let line = 	FDFGenerator._fieldWriter(f)
+				lines.push(line)
+			})
+			lines.push(this.footer)
+			fs.writeFile( '/tmp/fillform.fdf', /*[ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ]*/ lines.join( '\n' ),
 				err => {
 					if( err ) reject( err )
 					else fulfill( '/tmp/fillform.fdf' )
@@ -67,16 +73,12 @@ class FDFGenerator {
 
 	/**
 	 * @desc  Format field / value for fdf file
-	 * @param {String} fieldname - input field name
-	 * @param {String} fieldvalue - input field value
 	 * @returns {string} - format for fdf file
 	 * @private
+	 * @param {{fieldname:String, fieldvalue:String}}field
 	 */
-	static _fieldWriter( {
-		fieldname,
-		fieldvalue
-	} ) {
-		return `<< /T (${fieldname}) /V (${fieldvalue}) >>`
+	static _fieldWriter( field ) {
+		return `<< /T (${field.fieldname}) /V (${field.fieldvalue}) >>`
 	}
 
 	_checkAg() {
@@ -124,13 +126,15 @@ class FDFGenerator {
 	 */
 	_assignments( fields ) {
 		return new Promise( ( fulfill, reject ) => {
-			fulfill(fields.reduce((accum, {fieldname, fieldvalue}, index) => {
-				let dataField = this.pdfData.find( x => x[ 'FieldName' ] === fieldname ),
-					writeValue = fieldvalue
+			fulfill(fields.reduce((accum, field, index) => {
+				let dataField = this.pdfData.find( x => x[ 'FieldName' ] === field.fieldname ),
+					writeValue = field.fieldvalue
 				if(dataField.hasOwnProperty( 'FieldStateOption' )) {
-					writeValue = fieldvalue ? dataField[ 'FieldStateOption' ] : 0
+					writeValue = field.fieldvalue ? dataField[ 'FieldStateOption' ] : 0
 				}
-				return [{fieldname: dataField[ 'FieldName'], fieldvalue: writeValue}, ...accum]
+				accum.push({fieldname: dataField[ 'FieldName'], fieldvalue: writeValue})
+				return accum
+				// return [{fieldname: dataField[ 'FieldName'], fieldvalue: writeValue}, ...accum]
 			}, []))
 		} )
 	}

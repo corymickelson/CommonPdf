@@ -9,15 +9,14 @@ class Rotate {
 	 *
 	 * @param {String} source - pdf file path
 	 * @param {Number} targetFile - page number ( 1 based page number )
-	 * @param {String} out - output file path
-	 * @param {String} direction - north, south, east, west
+	 * @param {{out:String, direction:String}} opts - output file, north/south/east/west
 	 */
-	constructor( source, targetFile, { out, direction } ) {
+	constructor( source, targetFile, opts ) {
 		// check that source exists first
 		this.source = source
 		this.target = targetFile
-		this.out = out || '/tmp/out.pdf'
-		this.direction = direction || 'north'
+		this.out = opts.out || '/tmp/out.pdf'
+		this.direction = opts.direction || 'north'
 	}
 
 	/**
