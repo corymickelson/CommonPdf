@@ -99,6 +99,7 @@ class FDFGenerator {
 		return new Promise( ( fulfill, reject ) => {
 			exec( `pdftk ${pdf} dump_data_fields`, ( err, stdout, stderr ) => {
 				if( err ) reject( err )
+				if(stdout == '') fulfill([])
 				fulfill( stdout.split( '---' )
 					.filter( i => i.length > 3 )
 					.reduce( ( accum, item, index ) => {

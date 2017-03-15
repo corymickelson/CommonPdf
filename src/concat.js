@@ -14,7 +14,7 @@ class Concat {
 	/**
 	 *
 	 * @param {Array<String>} docs - document file paths
-	 * @param {String} outfile - out file path
+	 * @param {String} [outfile] - out file path
 	 */
 	constructor( docs, outfile ) {
 		this.docs = docs.map( doc => {

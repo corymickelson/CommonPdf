@@ -50,3 +50,36 @@ test( 'Name, Business Name, S Corp, and Partnership', t => {
 		} )
 } )
 
+test( 'Name, Business Name, S Corp, and Partnership, flatten', t => {
+	const fieldValues = [
+			{
+				fieldname: "topmostSubform[0].Page1[0].f1_1[0]",
+				fieldvalue: "test"
+			},
+			{
+				fieldname: "topmostSubform[0].Page1[0].f1_2[0]",
+				fieldvalue: "skyslope"
+			},
+			{
+				fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]',
+				fieldvalue: true
+			},
+			{
+				fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]',
+				fieldvalue: true
+			} ],
+		FDFGenerator = new Subject( pdfFile, fieldValues )
+	t.plan(2)
+	FDFGenerator.write()
+		.then( fdf => {
+			let FillForm = new _FillForm( fdf, pdfFile, ['flatten'] )
+			return FillForm.write()
+		} )
+		.then( pdf => {
+			t.ok(pdf)
+			return pdfData( pdf )
+		} )
+		.then( data => {
+			t.equal(data.length, 0)
+		} )
+} )
