@@ -2,7 +2,6 @@ node_modules
 .idea
 *.txt
 *.fdf
-*.pdf
 config.json
 .vscode
 typings
