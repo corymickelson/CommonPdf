@@ -17,7 +17,7 @@ class Concat {
 	 * @param {String} [outfile] - out file path
 	 * @param {Array<{start:Number, end:Number|String}>} [options] - page number ranges, split ex 1-2, 4-end
 	 */
-	constructor( docs, outfile, options = [] ) {
+	constructor( docs, outfile, options) {
 		this.docs = docs.map( doc => {
 			if( !fs.existsSync( doc ) ) throw new Error( `File not found ${doc}` )
 			return doc
@@ -27,7 +27,7 @@ class Concat {
 				accum.push( [ `${item.start}${!item.end ? '' : '-'}${item.end || '' }` ] )
 				return accum
 			}, [] )
-		} else this.options = options
+		} else this.options = []
 		if(this.docs.length > 1 && this.options.length > 0)
 			return new Error('Can not concat and split. Try, concatenating first, and splitting afterwards.')
 		this.out = outfile || '/tmp/out.pdf'
