@@ -17,7 +17,7 @@ test( 'rotate first page.', t => {
 		.write()
 		.then( out => {
 			let command = `pdftk ${out} dump_data | grep -i PageMediaRotation`
-			exec( command, ( error, stdin, stderr ) => {
+			exec( command, {shell: '/bin/sh'},( error, stdin, stderr ) => {
 				if( error || stderr ) t.fail()
 				const pageData = stdin.split( '\n' ).filter(x => x.length > 0)
 				t.equal(4, pageData.length)
@@ -34,7 +34,7 @@ test( 'rotate second page.', t => {
 		.write()
 		.then( out => {
 			let command = `pdftk ${out} dump_data | grep -i PageMediaRotation`
-			exec( command, ( error, stdin, stderr ) => {
+			exec( command, {shell: '/bin/sh'}, ( error, stdin, stderr ) => {
 				if( error || stderr ) t.fail()
 				const pageData = stdin.split( '\n' ).filter(x => x.length > 0)
 				t.equal(4, pageData.length)
@@ -53,7 +53,7 @@ test( 'rotate last page.', t => {
 		.write()
 		.then( out => {
 			let command = `pdftk ${out} dump_data | grep -i PageMediaRotation`
-			exec( command, ( error, stdin, stderr ) => {
+			exec( command, {shell: '/bin/sh'}, ( error, stdin, stderr ) => {
 				if( error || stderr ) t.fail()
 				const pageData = stdin.split( '\n' ).filter(x => x.length > 0)
 				t.equal(4, pageData.length)

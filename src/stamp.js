@@ -22,11 +22,13 @@ class Stamp {
 	/**
 	 *
 	 * @param {String} pdf - pdf file path
+	 * @param {String} outfile - out put file location. Defaults to /tmp
 	 */
-	constructor( pdf ) {
+	constructor( pdf, outfile ) {
 		//validate input
 		this.pdf = pdf
 		this.target = null
+		//this.out = outfile ||
 		//assign properties to this
 	}
 
@@ -41,10 +43,10 @@ class Stamp {
 			let out = '/tmp/placeholder.pdf',
 				placeholderStampPdf = '/tmp/placeholderStamped.pdf',
 				tmpPdf = new PDFDocument()
-			tmpPdf.image( img, opts.x, opts.y, { width: opts.width, height:opts.height } )
+			tmpPdf.image( img, opts.x, opts.y, { width: opts.width, height: opts.height } )
 			tmpPdf.pipe( fs.createWriteStream( out ) )
 			tmpPdf.end()
-			exec( `pdftk ${this.pdf} stamp ${out} output ${placeholderStampPdf}`, ( error, stdout, stderr ) => {
+			exec( `pdftk ${this.pdf} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
 				if( error || stderr ) reject( error )
 				else fulfill( placeholderStampPdf )
 			} )
@@ -54,7 +56,7 @@ class Stamp {
 	_burst() {
 		return new Promise( ( fulfill, reject ) => {
 			let command = `pdftk ${this.pdf} burst && find -name "pg_*.pdf"`
-			exec( command, ( error, stdin, stderr ) => {
+			exec( command, { shell: '/bin/sh' }, ( error, stdin, stderr ) => {
 				if( error || stderr ) reject( error )
 				else {
 					fulfill( stdin.split( '\n' )
@@ -74,10 +76,10 @@ class Stamp {
 					let pageString = page.toString()
 					if( pageString.length < 4 ) pageString = `0${page}`
 					this.target = pages.find( x => x.indexOf( pageString ) !== -1 )
-					Promise.resolve()
+					return Promise.resolve()
 				} )
 				.then( () => {
-					return this._stamp( img, { width: opts.width, height:opts.height, x: opts.x, y: opts.y } )
+					return this._stamp( img, { width: opts.width, height: opts.height, x: opts.x, y: opts.y } )
 				} )
 				.then( stampedPage => {
 					return new Concat( pages.reduce( ( accum, item, index ) => {

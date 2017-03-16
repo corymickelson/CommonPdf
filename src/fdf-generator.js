@@ -83,7 +83,7 @@ class FDFGenerator {
 
 	_checkAg() {
 		return new Promise( fulfill => {
-			exec( 'ag -h', ( error, stdout, stderr ) => {
+			exec( 'ag -h', {shell: '/bin/sh'}, ( error, stdout, stderr ) => {
 				if( error || stderr ) fulfill( false )
 				else fulfill( true )
 			} )
@@ -97,7 +97,7 @@ class FDFGenerator {
 	 */
 	static _extractFieldNames(pdf) {
 		return new Promise( ( fulfill, reject ) => {
-			exec( `pdftk ${pdf} dump_data_fields`, ( err, stdout, stderr ) => {
+			exec( `pdftk ${pdf} dump_data_fields`, {shell: '/bin/sh'}, ( err, stdout, stderr ) => {
 				if( err ) reject( err )
 				if(stdout == '') fulfill([])
 				fulfill( stdout.split( '---' )

@@ -26,7 +26,7 @@ class FillForm {
 		return new Promise( ( fulfill, reject ) => {
 			let command = `pdftk ${this.pdf} fill_form ${this.fdf} output ${this.out} ${
 				this.options.join( " " ).toLowerCase()}`
-			exec( command,
+			exec( command, { shell: '/bin/sh' },
 				( error, stdout, stderr ) => {
 					if( error || stderr ) reject( error )
 					else fulfill( this.out )

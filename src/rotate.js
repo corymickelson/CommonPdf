@@ -30,7 +30,7 @@ class Rotate {
 			if( target === 1 ) fulfill( `1${this.direction} 2-end` )
 			else {
 				let command = `pdftk ${this.source} dump_data | grep -i NumberOfPages`
-				exec( command, ( error, stdin, stderr ) => {
+				exec( command, {shell: '/bin/sh'}, ( error, stdin, stderr ) => {
 					if( error || stderr ) reject( error )
 					let pageCount = parseInt( stdin.substr( stdin.indexOf( ':' ) + 2 ), stdin.indexOf( '\n' ) )
 					if( pageCount < target ) reject( 'page out of bounds' )
@@ -51,7 +51,7 @@ class Rotate {
 			this._cat( this.target )
 				.then( x => {
 					let command = `pdftk ${this.source} cat ${x} output ${this.out} `
-					exec( command, ( error, stdin, stderr ) => {
+					exec( command, {shell: '/bin/sh'}, ( error, stdin, stderr ) => {
 						if( error || stderr ) reject( error )
 						else fulfill( this.out )
 					} )
