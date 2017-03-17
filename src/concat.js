@@ -9,6 +9,9 @@ const fs = require( 'fs' ),
 
 /**
  * @class Concat
+ * @property {Array<String>} docs
+ * @property {String} outfile
+ * @property {Array} options
  */
 class Concat {
 	/**
@@ -31,7 +34,6 @@ class Concat {
 		if( this.docs.length > 1 && this.options.length > 0 )
 			return new Error( 'Can not concat and split. Try, concatenating first, and splitting afterwards.' )
 		this.out = outfile || '/tmp/out.pdf'
-
 	}
 
 	/**

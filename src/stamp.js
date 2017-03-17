@@ -22,7 +22,7 @@ class Stamp {
 	/**
 	 *
 	 * @param {String} pdf - pdf file path
-	 * @param {String} outfile - out put file location. Defaults to /tmp
+	 * @param {String} [outfile] - out put file location. Defaults to /tmp
 	 */
 	constructor( pdf, outfile ) {
 		//validate input
