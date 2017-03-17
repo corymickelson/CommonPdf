@@ -5,6 +5,7 @@
 const exec = require( 'child_process' ).exec,
 	fs = require( 'fs' ),
 	PDFDocument = require( 'pdfkit' ),
+	id = require('uuid').v4,
 	Concat = require( './concat' ).Concat
 
 /**
@@ -28,8 +29,7 @@ class Stamp {
 		//validate input
 		this.pdf = pdf
 		this.target = null
-		//this.out = outfile ||
-		//assign properties to this
+		this.out = outfile || `/tmp/${id()}.pdf`
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Stamp {
 			tmpPdf.image( img, opts.x, opts.y, { width: opts.width, height: opts.height } )
 			tmpPdf.pipe( fs.createWriteStream( out ) )
 			tmpPdf.end()
-			exec( `pdftk ${this.pdf} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+			exec( `pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
 				if( error || stderr ) reject( error )
 				else fulfill( placeholderStampPdf )
 			} )
@@ -83,10 +83,11 @@ class Stamp {
 				} )
 				.then( stampedPage => {
 					return new Concat( pages.reduce( ( accum, item, index ) => {
-						let pageIndex = Stamp.pageIndex( item )
-						accum[ pageIndex ] = pageIndex === Stamp.pageIndex( this.target ) ? stampedPage : item
+						let pageIndex = Stamp.pageIndex( item ),
+							targetIndex = Stamp.pageIndex(this.target)
+						accum[ pageIndex ] = pageIndex === targetIndex ? stampedPage : item
 						return accum
-					} ) ).write()
+					}, [] ), this.out ).write()
 				} )
 				.then( final => {
 					fulfill( final )

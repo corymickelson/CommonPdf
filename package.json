@@ -36,7 +36,8 @@
     "tape": "^4.6.3"
   },
   "dependencies": {
-    "pdfkit": "^0.8.0"
+    "pdfkit": "^0.8.0",
+    "uuid": "^3.0.1"
   },
   "pre-commit": [
     "test",
