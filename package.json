@@ -3,6 +3,7 @@
   "version": "0.0.6",
   "description": "Pdf utility library",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "tape ./src/**.spec.js | tap-spec && rm pg_*.pdf doc_data.txt",
     "lint": "eslint .",
@@ -32,8 +33,7 @@
     "eslint-plugin-jsdoc": "^2.4.0",
     "precommit-hook": "3.0.0",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3",
-    "webcomponents.js": "0.7.23"
+    "tape": "^4.6.3"
   },
   "dependencies": {
     "pdfkit": "^0.8.0"
