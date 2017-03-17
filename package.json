@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/corymickelson/CommonPdf#readme",
   "devDependencies": {
+    "@types/node": "^7.0.8",
     "eslint": "^3.12.2",
     "eslint-plugin-jsdoc": "^2.4.0",
     "precommit-hook": "3.0.0",

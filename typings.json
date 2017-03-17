@@ -1,0 +1,5 @@
+{
+  "globalDevDependencies": {
+    "pdfkit": "registry:dt/pdfkit#0.7.2+20170310072738"
+  }
+}
