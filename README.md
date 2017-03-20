@@ -30,7 +30,7 @@ will be a unique GUID filename. This is done to avoid name conflicts in AWS Lamb
 written to /tmp may persist across multiple function invocations).
 
 
-####Concat:
+#### Concat:
 Concat accepts an array of pdf file paths. Concat can also be used to split a document. Given a single Pdf input
  define optional parameter ```Array<{start:number, end:number|string}>``` 
 ```javascript
@@ -44,7 +44,7 @@ new Concat(pdfs, opts /*optional*/)
     })
 ```
 
-####FillForm:
+#### FillForm:
 FillForm requires FdfGenerator, this class will be briefly covered here, for more info look at fdf-generator.spec
 ```javascript
 const FillForm = require('commonpdf').FillForm,
@@ -65,7 +65,7 @@ fdf.write()
     	// do something will filled pdf form
     })
 ```
-####Stamp:
+#### Stamp:
 ```javascript
 const Stamp = require('commonpdf').Stamp,
     img = 'data:image/png;base64,.....',
@@ -79,7 +79,7 @@ new Stamp(pdf).write(img, pageNumber, dimensions)
     })
 ```
 
-####Rotate:
+#### Rotate:
 ```javascript
 const Rotate = require('commonpdf').Rotate,
     pdf = 'pdf/file/path',
@@ -94,7 +94,7 @@ new Rotate(pdf, pageNumber, config)
 
 ```
 
-##Todo
+## Todo
  - ~~pdf view portal (web component)~~ Moved to separate repo (CommonPdfComponent)
  - ~~code documentation~~ Added typescript definition file
  - contributor details
