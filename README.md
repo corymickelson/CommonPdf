@@ -1,11 +1,9 @@
 # Common Pdf
 
 
-***
-warning very early stages, not for production use.
-***
-
 CommonPdf wraps a small subset of **pdftk** aiming to provide performant pdf operations in node.js applications.
+Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for setup are described below.
+
 
 ## API
 
@@ -19,18 +17,22 @@ CommonPdf wraps a small subset of **pdftk** aiming to provide performant pdf ope
 - Install CommonPdf `npm i -S commonpdf`
 - Import only what you need
 ```javascript 
-    const Rotate = require( 'commonpdf' ).Rotate,
-        Concat = require( 'commonpdf' ).Concat,
-        FillForm = require( 'commonpdf' ).FillForm,
-        Stamp = requir( 'commonpdf' ).Stamp
+const Rotate = require( 'commonpdf' ).Rotate,
+    Concat = require( 'commonpdf' ).Concat,
+    FillForm = require( 'commonpdf' ).FillForm,
+    Stamp = require( 'commonpdf' ).Stamp
 ```
 ## Basic Usage
-All classes expose a write() method. The write methods returns a promise. The promise contains the path to the newly written file.
+All classes expose a write() method. The write methods returns a promise.
+The promise contains the path to the newly written file.
+All classes also accept an output file parameter. If this is undefined the output 
+will be a unique GUID filename. This is done to avoid name conflicts in AWS Lambda (files 
+written to /tmp may persist across multiple function invocations).
 
 
 ####Concat:
-
-Concat accepts an array of pdf file paths. Options: output file location
+Concat accepts an array of pdf file paths. Concat can also be used to split a document. Given a single Pdf input
+ define optional parameter ```Array<{start:number, end:number|string}>``` 
 ```javascript
 const Concat = require( 'commonpdf' ).Concat,
     pdfs = ['fileA.pdf', 'fileB.pdf'],
@@ -43,14 +45,13 @@ new Concat(pdfs, opts /*optional*/)
 ```
 
 ####FillForm:
-
 FillForm requires FdfGenerator, this class will be briefly covered here, for more info look at fdf-generator.spec
 ```javascript
 const FillForm = require('commonpdf').FillForm,
     FdfGenerator = require('commonpdf').FDFGenerator,
     fdfParameters = [
-    	{fieldname:'acro form field name', fieldvalue:'a string value'},
-    	{fieldname:'a button', fieldvalue:true/false}
+    	{fieldname:'hierarchical field name', fieldvalue:'a string value'},
+    	{fieldname:'abutton', fieldvalue:true/false}
     ],
     pdfFilePath = '/path/to/target.pdf'
 
@@ -65,7 +66,6 @@ fdf.write()
     })
 ```
 ####Stamp:
-
 ```javascript
 const Stamp = require('commonpdf').Stamp,
     img = 'data:image/png;base64,.....',
@@ -95,13 +95,13 @@ new Rotate(pdf, pageNumber, config)
 ```
 
 ##Todo
-
- - document view portal (web component)
- - document code
+ - ~~pdf view portal (web component)~~ Moved to separate repo (CommonPdfComponent)
+ - ~~code documentation~~ Added typescript definition file
  - contributor details
- - error handling
- - expand tested pdf's
- 
+ - ~~expand tested pdf's~~ Added test-data directory for unit testing
+ - add complete list of command line parameter options
+ - add options documentation
+ - improve README
 ## Run as Lambda
 
 Create a zip with
