@@ -1,19 +1,26 @@
 'use strict'
 const fs = require( 'fs' ),
 	exec = require( 'child_process' ).exec,
-	join = require( 'path' ).join
+	join = require( 'path' ).join,
+	id = require('uuid').v4
 
+/**
+ * @property {String} out - output file path. This module assums execution in aws lambda environment.
+ *      The passed in pdf file should be a unique s3 file name (key). If it is not this file could
+ *      potentially be over-written be a subsequent call.
+ */
 class FillForm {
 	/**
 	 * @param {String} fdfFilePath - fdf file path
 	 * @param {String} pdfFilePath - pdf file path
+	 * @param {String} [outfile] - output file path
 	 * @param {Array} [options] - Available options: flatten, more to come....
 	 * @todo Add check that files exist
 	 */
-	constructor( fdfFilePath, pdfFilePath, options ) {
+	constructor( fdfFilePath, pdfFilePath, options, outfile ) {
 		this.fdf = fdfFilePath
 		this.pdf = join( __dirname, pdfFilePath )
-		this.out = `${this.pdf.substr( 0, this.pdf.length - 4 )}.fill.pdf`
+		this.out = `/tmp/${outfile || id()}.pdf`
 		if( options && !Array.isArray( options ) ) throw new Error( 'Options must be in Array format' )
 		this.options = options || []
 	}

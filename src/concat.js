@@ -5,7 +5,8 @@
 
 const fs = require( 'fs' ),
 	exec = require( 'child_process' ).exec,
-	join = require( 'path' ).join
+	join = require( 'path' ).join,
+	id = require('uuid').v4
 
 /**
  * @class Concat
@@ -33,7 +34,7 @@ class Concat {
 		} else this.options = []
 		if( this.docs.length > 1 && this.options.length > 0 )
 			return new Error( 'Can not concat and split. Try, concatenating first, and splitting afterwards.' )
-		this.out = outfile || '/tmp/out.pdf'
+		this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
 	}
 
 	/**

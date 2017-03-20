@@ -2,7 +2,8 @@
  * Created by cory on 12/29/16.
  */
 'use strict'
-const exec = require( 'child_process' ).exec
+const exec = require( 'child_process' ).exec,
+	id = require('uuid').v4
 
 class Rotate {
 	/**
@@ -15,7 +16,8 @@ class Rotate {
 		// check that source exists first
 		this.source = source
 		this.target = targetFile
-		this.out = opts.out || '/tmp/out.pdf'
+		this.out = `/tmp/${opts.out || id()}`
+		this.out = (opts.out && opts.out.substr(0, 4) === '/tmp') ? opts.out : `/tmp/${opts.out || id()}.pdf`
 		this.direction = opts.direction || 'north'
 	}
 

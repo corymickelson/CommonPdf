@@ -1,6 +1,7 @@
 'use strict'
 const exec = require( 'child_process' ).exec,
 	join = require( 'path' ).join,
+	id = require( 'uuid' ).v4,
 	fs = require( 'fs' )
 
 class FDFGenerator {
@@ -13,10 +14,11 @@ class FDFGenerator {
 		this.footer = '] >> >>\n endobj\n trailer\n <</Root 1 0 R>>\n %%EOF'
 		this.pdf = !fs.existsSync( join( __dirname, pdf ) ) ? //eslint-disable-line
 			new Error( 'pdf file not found' ) :
-			join(__dirname, pdf)
+			join( __dirname, pdf )
 		this.values = values.length === 0 ?
 			new Error( 'values must not be null' ) :
 			values
+		this.out = `${id()}.fdf`
 	}
 
 	write() {
@@ -42,10 +44,10 @@ class FDFGenerator {
 
 	_validate() {
 		return new Promise( ( fulfill, reject ) => {
-			FDFGenerator._extractFieldNames(this.pdf)
+			FDFGenerator._extractFieldNames( this.pdf )
 				.then( titles => {
-					if(!this.values.every(x => titles.find(t => t.FieldName === x.fieldname))) reject( new Error( 'mismatched field name mapping' ) )
-					fulfill(titles)
+					if( !this.values.every( x => titles.find( t => t.FieldName === x.fieldname ) ) ) reject( new Error( 'mismatched field name mapping' ) )
+					fulfill( titles )
 				} )
 
 		} )
@@ -57,16 +59,16 @@ class FDFGenerator {
 	 */
 	_write( fdfMap ) {
 		return new Promise( ( fulfill, reject ) => {
-			let lines = [this.header]
-			fdfMap.forEach(f => {
-				let line = 	FDFGenerator._fieldWriter(f)
-				lines.push(line)
-			})
-			lines.push(this.footer)
-			fs.writeFile( '/tmp/fillform.fdf', /*[ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ]*/ lines.join( '\n' ),
+			let lines = [ this.header ]
+			fdfMap.forEach( f => {
+				let line = FDFGenerator._fieldWriter( f )
+				lines.push( line )
+			} )
+			lines.push( this.footer )
+			fs.writeFile( this.out, /*[ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ]*/ lines.join( '\n' ),
 				err => {
 					if( err ) reject( err )
-					else fulfill( '/tmp/fillform.fdf' )
+					else fulfill( this.out )
 				} )
 		} )
 	}
@@ -83,7 +85,7 @@ class FDFGenerator {
 
 	_checkAg() {
 		return new Promise( fulfill => {
-			exec( 'ag -h', {shell: '/bin/sh'}, ( error, stdout, stderr ) => {
+			exec( 'ag -h', { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
 				if( error || stderr ) fulfill( false )
 				else fulfill( true )
 			} )
@@ -95,11 +97,11 @@ class FDFGenerator {
 	 * @param {String} pdf - pdf file path
 	 * @returns {Promise<Array>} - field dump file path
 	 */
-	static _extractFieldNames(pdf) {
+	static _extractFieldNames( pdf ) {
 		return new Promise( ( fulfill, reject ) => {
-			exec( `pdftk ${pdf} dump_data_fields`, {shell: '/bin/sh'}, ( err, stdout, stderr ) => {
+			exec( `pdftk ${pdf} dump_data_fields`, { shell: '/bin/sh' }, ( err, stdout, stderr ) => {
 				if( err ) reject( err )
-				if(stdout == '') fulfill([])
+				if( stdout == '' ) fulfill( [] )
 				fulfill( stdout.split( '---' )
 					.filter( i => i.length > 3 )
 					.reduce( ( accum, item, index ) => {
@@ -127,16 +129,16 @@ class FDFGenerator {
 	 */
 	_assignments( fields ) {
 		return new Promise( ( fulfill, reject ) => {
-			fulfill(fields.reduce((accum, field, index) => {
+			fulfill( fields.reduce( ( accum, field, index ) => {
 				let dataField = this.pdfData.find( x => x[ 'FieldName' ] === field.fieldname ),
 					writeValue = field.fieldvalue
-				if(dataField.hasOwnProperty( 'FieldStateOption' )) {
+				if( dataField.hasOwnProperty( 'FieldStateOption' ) ) {
 					writeValue = field.fieldvalue ? dataField[ 'FieldStateOption' ] : 0
 				}
-				accum.push({fieldname: dataField[ 'FieldName'], fieldvalue: writeValue})
+				accum.push( { fieldname: dataField[ 'FieldName' ], fieldvalue: writeValue } )
 				return accum
 				// return [{fieldname: dataField[ 'FieldName'], fieldvalue: writeValue}, ...accum]
-			}, []))
+			}, [] ) )
 		} )
 	}
 }
