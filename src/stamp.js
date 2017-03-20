@@ -26,10 +26,9 @@ class Stamp {
 	 * @param {String} [outfile] - out put file location. Defaults to /tmp
 	 */
 	constructor( pdf, outfile ) {
-		//validate input
 		this.pdf = pdf
 		this.target = null
-		this.out = outfile || `/tmp/${id()}.pdf`
+		this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
 	}
 
 	/**
@@ -40,8 +39,8 @@ class Stamp {
 	 */
 	_stamp( img, opts ) {
 		return new Promise( ( fulfill, reject ) => {
-			let out = '/tmp/placeholder.pdf',
-				placeholderStampPdf = '/tmp/placeholderStamped.pdf',
+			let out = `/tmp/${id()}.pdf`,
+				placeholderStampPdf = `/tmp/${id()}.pdf`,
 				tmpPdf = new PDFDocument()
 			tmpPdf.image( img, opts.x, opts.y, { width: opts.width, height: opts.height } )
 			tmpPdf.pipe( fs.createWriteStream( out ) )
