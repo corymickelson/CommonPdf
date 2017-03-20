@@ -15,6 +15,7 @@ Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for
 ## Getting Started
 - Install [pdftk](https://www.pdflabs.com/tools/pdftk-server/) and put on your path
 - Install CommonPdf `npm i -S commonpdf`
+- Test pdftk & CommonPdf installation ```npm test```
 - Import only what you need
 ```javascript 
 const Rotate = require( 'commonpdf' ).Rotate,
@@ -23,11 +24,15 @@ const Rotate = require( 'commonpdf' ).Rotate,
     Stamp = require( 'commonpdf' ).Stamp
 ```
 ## Basic Usage
-All classes expose a write() method. The write methods returns a promise.
-The promise contains the path to the newly written file.
-All classes also accept an output file parameter. If this is undefined the output 
-will be a unique GUID filename. This is done to avoid name conflicts in AWS Lambda (files 
+All classes expose a ```write()``` method, and every write returns a promise. The resolved promise will contain
+the file path to the newly written file.
+
+File names can either be passed in as an optional parameter or if undefined a unique name will be generated.
+This is done to avoid name conflicts in AWS Lambda (files 
 written to /tmp may persist across multiple function invocations).
+
+<span style="background-color:#FFFF00">Documentation is currently vague and incomplete. Until this has been remedied (better docs is my current milestone)
+exploring the .spec.js files in the /src directory will provide working examples that you may follow.</span>
 
 
 #### Concat:
@@ -102,6 +107,7 @@ new Rotate(pdf, pageNumber, config)
  - add complete list of command line parameter options
  - add options documentation
  - improve README
+ - file name parameter standardization (on the constructor or on the write())
 ## Run as Lambda
 
 Create a zip with
