@@ -18,7 +18,7 @@ class FDFGenerator {
 		this.values = values.length === 0 ?
 			new Error( 'values must not be null' ) :
 			values
-		this.out = `${id()}.fdf`
+		this.out = `/tmp/${id()}.fdf`
 	}
 
 	write() {
