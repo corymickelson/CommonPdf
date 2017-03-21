@@ -2,7 +2,7 @@
 const fs = require( 'fs' ),
 	exec = require( 'child_process' ).exec,
 	join = require( 'path' ).join,
-	id = require('uuid').v4
+	id = require( 'uuid' ).v4
 
 /**
  * @property {String} out - output file path. This module assums execution in aws lambda environment.
@@ -19,7 +19,10 @@ class FillForm {
 	 */
 	constructor( fdfFilePath, pdfFilePath, options, outfile ) {
 		this.fdf = fdfFilePath
-		this.pdf = join( __dirname, pdfFilePath )
+		//this.pdf = pdfFilePath.substr( 0, 4 ) === '/tmp' ? join( __dirname, pdfFilePath )
+		this.pdf = fs.existsSync( pdfFilePath.substr( 0, 4 ) === '/tmp' ? pdfFilePath : join( __dirname, pdfFilePath ) ) ? //eslint-disable-line
+			pdfFilePath.substr( 0, 4 ) === '/tmp' ? pdfFilePath : join( __dirname, pdfFilePath ) :
+			new Error( 'pdf file not found' )
 		this.out = `/tmp/${outfile || id()}.pdf`
 		if( options && !Array.isArray( options ) ) throw new Error( 'Options must be in Array format' )
 		this.options = options || []

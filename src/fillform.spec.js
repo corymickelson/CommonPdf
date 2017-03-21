@@ -6,7 +6,7 @@ const test = require( 'tape' ),
 	_FillForm = require( './fillform' ).FillForm,
 	pdfData = require( './fdf-generator' ).PdfData
 
-const pdfFile =  '../test-data/fw9.pdf'
+const pdfFile =  '/tmp/46eec7a0-5308-4241-b4cc-7b7b367d0c8f.pdf' //'../test-data/fw9.pdf'
 
 test( 'Name, Business Name, S Corp, and Partnership', t => {
 	const fieldValues = [

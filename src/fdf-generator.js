@@ -12,9 +12,9 @@ class FDFGenerator {
 	constructor( pdf, values ) {
 		this.header = '%FDF-1.2\n 1 0 obj<</FDF<< /Fields['
 		this.footer = '] >> >>\n endobj\n trailer\n <</Root 1 0 R>>\n %%EOF'
-		this.pdf = !fs.existsSync( join( __dirname, pdf ) ) ? //eslint-disable-line
-			new Error( 'pdf file not found' ) :
-			join( __dirname, pdf )
+		this.pdf = fs.existsSync(pdf.substr(0,4) === '/tmp' ? pdf : join(__dirname, pdf) ) ? //eslint-disable-line
+			pdf.substr(0,4) === '/tmp' ? pdf : join(__dirname, pdf) :
+			new Error( 'pdf file not found' )
 		this.values = values.length === 0 ?
 			new Error( 'values must not be null' ) :
 			values
