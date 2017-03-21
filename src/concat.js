@@ -18,10 +18,10 @@ class Concat {
 	/**
 	 *
 	 * @param {Array<String>} docs - document file paths
-	 * @param {String} [outfile] - out file path
 	 * @param {Array<{start:Number, end:Number|String}>} [options] - page number ranges, split ex 1-2, 4-end
+	 * @param {String} [outfile] - out file path
 	 */
-	constructor( docs, outfile, options ) {
+	constructor( docs, options, outfile ) {
 		this.docs = docs.map( doc => {
 			if( !fs.existsSync( doc ) ) throw new Error( `File not found ${doc}` )
 			return doc

@@ -29,7 +29,7 @@ test( 'Concat', t => {
 		} )
 } )
 test( 'Split', t => {
-	new Subject( [ join( __dirname, '../test-data/fw9.pdf' ) ], null, [ {
+	new Subject( [ join( __dirname, '../test-data/fw9.pdf' ) ], [ {
 		start: 1,
 		end: 2
 	}, {
@@ -51,7 +51,7 @@ test( 'Split', t => {
 		} )
 } )
 test( 'Split 1-1', t => {
-	new Subject( [ join( __dirname, '../test-data/fw9.pdf' ) ], null, [ {
+	new Subject( [ join( __dirname, '../test-data/fw9.pdf' ) ], [ {
 		start: 1,
 		end: 1
 	}, {
@@ -74,7 +74,7 @@ test( 'Split 1-1', t => {
 } )
 test( 'Concat and split', t => {
 	t.plan( 1 )
-	t.equal( new Subject( [ join( __dirname, '../test-data/fw9.pdf' ), join( __dirname, '../test-data/de542.pdf' ) ], null, [ {
+	t.equal( new Subject( [ join( __dirname, '../test-data/fw9.pdf' ), join( __dirname, '../test-data/de542.pdf' ) ], [ {
 			start: 1,
 			end: 1
 		}, {

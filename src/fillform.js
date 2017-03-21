@@ -13,13 +13,12 @@ class FillForm {
 	/**
 	 * @param {String} fdfFilePath - fdf file path
 	 * @param {String} pdfFilePath - pdf file path
-	 * @param {String} [outfile] - output file path
 	 * @param {Array} [options] - Available options: flatten, more to come....
+	 * @param {String} [outfile] - output file path
 	 * @todo Add check that files exist
 	 */
 	constructor( fdfFilePath, pdfFilePath, options, outfile ) {
 		this.fdf = fdfFilePath
-		//this.pdf = pdfFilePath.substr( 0, 4 ) === '/tmp' ? join( __dirname, pdfFilePath )
 		this.pdf = fs.existsSync( pdfFilePath.substr( 0, 4 ) === '/tmp' ? pdfFilePath : join( __dirname, pdfFilePath ) ) ? //eslint-disable-line
 			pdfFilePath.substr( 0, 4 ) === '/tmp' ? pdfFilePath : join( __dirname, pdfFilePath ) :
 			new Error( 'pdf file not found' )

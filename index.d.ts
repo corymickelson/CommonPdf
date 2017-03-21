@@ -23,7 +23,7 @@ declare module 'commonpdf' {
 		outfile?: FilePath
 		options?: Array<string>
 
-		constructor( docs: Array<FilePath>, outfile?: FilePath, options?: Array<{ start: Number, end: Number|string }> )
+		constructor( docs: Array<FilePath>,  options?: Array<{ start: Number, end: Number|string }>, outfile?: FilePath )
 
 		write(): Promise<FilePath>
 	}
@@ -77,7 +77,7 @@ declare module 'commonpdf' {
 		out?: FilePath
 		options?: Array|Error
 
-		constructor( fdfFilePath: FilePath, pdfFilePath: FilePath, options?: Array<string> )
+		constructor( fdfFilePath: FilePath, pdfFilePath: FilePath, options?: Array<string>, outFile?:FilePath )
 
 		write(): Promise<FilePath>
 	}
@@ -95,7 +95,7 @@ declare module 'commonpdf' {
 		out?: FilePath
 		direction: string
 
-		constructor( source: FilePath, targetFile: Number, opts: { out: FilePath, direction: string } )
+		constructor( source: FilePath, targetFile: Number, opts: { direction: string }, outFile?:FilePath )
 
 		private _cat( target: Number ): Promise<FilePath>
 
