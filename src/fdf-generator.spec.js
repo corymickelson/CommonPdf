@@ -3,7 +3,8 @@ const test = require( 'tape' ),
 	fs = require( 'fs' ),
 	Subject = require( './fdf-generator' ).FDFGenerator,
 	_FillForm = require( './fillform' ).FillForm,
-	pdfData = require('./fdf-generator').PdfData
+	pdfData = require('./fdf-generator').PdfData,
+	assert = require( "assert" );
 
 
 test( 'Name, Business Name, S Corp, and Partnership', t => {
@@ -48,4 +49,30 @@ test( 'Name, Business Name, S Corp, and Partnership', t => {
 
 		} )
 } )
+test( 'Throws exception on mismatched inputs', t => {
+	const fieldValues = [
+			{
+				fieldname: "invalidFieldName",
+				fieldvalue: "test"
+			},
+			{
+				fieldname: "topmostSubform[0].Page1[0].f1_2[0]",
+				fieldvalue: "skyslope"
+			},
+			{
+				fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]',
+				fieldvalue: true
+			},
+			{
+				fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]',
+				fieldvalue: true
+			} ],
+		FDFGenerator = new Subject( '../test-data/fw9.pdf', fieldValues )
+	t.equal(assert.throws(FDFGenerator._validate), undefined, 'Assert an exception has been thrown')
+	t.end()
+} )
 
+test('throws exception on invalid constructor arguments', t => {
+	t.equal(assert.throws(function() { Subject._constructorValidations('no', null)}), undefined, 'Assert an exception has been thrown')
+	t.end()
+})

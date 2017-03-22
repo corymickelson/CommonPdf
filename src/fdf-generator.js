@@ -10,15 +10,22 @@ class FDFGenerator {
 	 * @param {Array<{fieldname:String, fieldvalue:String}>} values - value map
 	 */
 	constructor( pdf, values ) {
+		FDFGenerator._constructorValidations( pdf, values )
 		this.header = '%FDF-1.2\n 1 0 obj<</FDF<< /Fields['
 		this.footer = '] >> >>\n endobj\n trailer\n <</Root 1 0 R>>\n %%EOF'
-		this.pdf = fs.existsSync(pdf.substr(0,4) === '/tmp' ? pdf : join(__dirname, pdf) ) ? //eslint-disable-line
-			pdf.substr(0,4) === '/tmp' ? pdf : join(__dirname, pdf) :
-			new Error( 'pdf file not found' )
-		this.values = values.length === 0 ?
-			new Error( 'values must not be null' ) :
-			values
+		this.pdf = pdf.substr( 0, 4 ) === '/tmp' ? pdf : join( __dirname, pdf )
+		this.values = values
 		this.out = `/tmp/${id()}.fdf`
+	}
+
+	static _constructorValidations( pdf, values ) {
+		if(typeof pdf !== 'string' || !Array.isArray(values)) throw new TypeError()
+		if( !fs.existsSync( pdf.substr( 0, 4 ) === '/tmp' ? pdf : join( __dirname, pdf ) ) ) {
+			throw new Error( 'pdf file not found' )
+		}
+		if( !values ) {
+			throw new Error( 'values must not be null' )
+		}
 	}
 
 	write() {
@@ -43,14 +50,13 @@ class FDFGenerator {
 	}
 
 	_validate() {
-		return new Promise( ( fulfill, reject ) => {
-			FDFGenerator._extractFieldNames( this.pdf )
-				.then( titles => {
-					if( !this.values.every( x => titles.find( t => t.FieldName === x.fieldname ) ) ) reject( new Error( 'mismatched field name mapping' ) )
-					fulfill( titles )
-				} )
-
-		} )
+		return FDFGenerator._extractFieldNames( this.pdf )
+			.then( titles => {
+				if( !this.values.every( x => titles.find( t => t.FieldName === x.fieldname ) ) ) {
+					throw new Error( 'mismatched field name mapping' )
+				}
+				return titles
+			} )
 	}
 
 	/**
@@ -101,7 +107,7 @@ class FDFGenerator {
 		return new Promise( ( fulfill, reject ) => {
 			exec( `pdftk ${pdf} dump_data_fields`, { shell: '/bin/sh' }, ( err, stdout, stderr ) => {
 				if( err ) reject( err )
-				if( stdout == '' ) fulfill( [] )
+				if( stdout === '' ) fulfill( [] )
 				fulfill( stdout.split( '---' )
 					.filter( i => i.length > 3 )
 					.reduce( ( accum, item, index ) => {

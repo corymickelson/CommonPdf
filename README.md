@@ -108,6 +108,7 @@ new Rotate(pdf, pageNumber, config)
  - add options documentation
  - improve README
  - file name parameter standardization (on the constructor or on the write())
+ - better error handling, human readable error messages
 ## Run as Lambda
 
 Create a zip with
