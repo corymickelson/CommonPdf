@@ -74,9 +74,7 @@ class Stamp {
 			this._burst()
 				.then( burstPages => {
 					pages = burstPages
-					let pageString = page
-					if( pageString.length < 4 ) pageString = `0${page}`
-					this.target = pages.find( x => x.indexOf( pageString ) !== -1 )
+					this.target = pages[ page -1 ]
 					return Promise.resolve()
 				} )
 				.then( () => {

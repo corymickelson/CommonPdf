@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "tape ./src/**.spec.js | tap-spec && rm pg_*.pdf doc_data.txt",
+    "test": "tape ./src/**.spec.js | tap-spec",
     "lint": "eslint .",
     "validate": "npm ls"
   },

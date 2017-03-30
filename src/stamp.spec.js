@@ -11,16 +11,15 @@ test( 'burst', t => {
 	let stamp = new Subject( join( __dirname, '../test-data/fw9.pdf' ) )
 	stamp._burst()
 		.then( pages => {
-			console.log("Pages: " + JSON.stringify(pages))
 			t.plan( 1 )
 			t.equal( pages.length, 4 )
 		} )
 } )
 test( 'page index', t => {
-	let indexOne = Subject.pageIndex( '/tmp/fw9-pg_01.pdf' ),
-		indexTwo = Subject.pageIndex( '/tmp/fw9-pg_02.pdf' ),
-		indexThree = Subject.pageIndex( '/tmp/fw9-pg_03.pdf' ),
-		indexFour = Subject.pageIndex( '/tmp/fw9-pg_04.pdf' )
+	let indexOne = Subject.pageIndex( '/tmp/fw9-pg_1.pdf' ),
+		indexTwo = Subject.pageIndex( '/tmp/fw9-pg_2.pdf' ),
+		indexThree = Subject.pageIndex( '/tmp/fw9-pg_3.pdf' ),
+		indexFour = Subject.pageIndex( '/tmp/fw9-pg_4.pdf' )
 	t.equal( indexOne, 0)
 	t.equal( indexTwo, 1 )
 	t.equal( indexThree, 2 )
