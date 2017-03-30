@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "tape ./src/**.spec.js | tap-spec",
+    "test": "tape ./src/**.spec.js",
     "lint": "eslint .",
     "validate": "npm ls"
   },
