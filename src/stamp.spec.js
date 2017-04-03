@@ -9,7 +9,6 @@ const test = require( 'tape' ),
 
 test( 'burst', t => {
 	let stamp = new Subject( join( __dirname, '../test-data/fw9.pdf' ) )
-	console.log( "Created stamp" )
 	stamp._burst()
 		.then( pages => {
 			t.plan( 1 )
@@ -21,11 +20,15 @@ test( 'page index', t => {
 	let indexOne = Subject.pageIndex( '/tmp/fw9-pg_1.pdf' ),
 		indexTwo = Subject.pageIndex( '/tmp/fw9-pg_2.pdf' ),
 		indexThree = Subject.pageIndex( '/tmp/fw9-pg_3.pdf' ),
-		indexFour = Subject.pageIndex( '/tmp/fw9-pg_4.pdf' )
+		indexFour = Subject.pageIndex( '/tmp/fw9-pg_4.pdf' ),
+		indexFourty = Subject.pageIndex( '/tmp/fw9-pg_40.pdf' ),
+		indexNineHundredNinetyNine = Subject.pageIndex( './pg_1000.pdf' )
 	t.equal( indexOne, 0 )
 	t.equal( indexTwo, 1 )
 	t.equal( indexThree, 2 )
 	t.equal( indexFour, 3 )
+	t.equal( indexFourty, 39 )
+	t.equal( indexNineHundredNinetyNine, 999 )
 	t.end()
 } )
 test( 'stamp', t => {

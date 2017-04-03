@@ -76,31 +76,29 @@ class Stamp {
 					pages = burstPages
 					let pageString = `pg_${page}.pdf`
 					this.target = pages.find( x => x.indexOf( pageString ) !== -1 )
-					console.log( "Burst - Pages: " + JSON.stringify( pages ) )
-					console.log( "Burst - Target Page: " + this.target )
 					return Promise.resolve()
 				} )
-				.then( () => {
-					return new Promise( ( resolve ) => {
-						exec( `ls -lah -d /tmp/*`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
-							if( error || stderr ) console.log( error )
-							console.log( "Burst - Temp Files before stamp:\r\n" + stdout )
-							resolve()
-						} )
-					} )
-				} )
+				// .then( () => {
+				// 	return new Promise( ( resolve ) => {
+				// 		exec( `ls -lah -d /tmp/*`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+				// 			if( error || stderr ) console.log( error )
+				// 			console.log( "Burst - Temp Files before stamp:\r\n" + stdout )
+				// 			resolve()
+				// 		} )
+				// 	} )
+				// } )
 				.then( () => {
 					return this._stamp( img, { width: opts.width, height: opts.height, x: opts.x, y: opts.y } )
 				} )
-				.then( ( stampedPage ) => {
-					return new Promise( ( resolve ) => {
-						exec( `ls -lah -d /tmp/*`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
-							if( error || stderr ) console.log( error )
-							console.log( "Burst - Temp Files after stamp:\r\n" + stdout )
-							resolve( stampedPage )
-						} )
-					} )
-				} )
+				// .then( ( stampedPage ) => {
+				// 	return new Promise( ( resolve ) => {
+				// 		exec( `ls -lah -d /tmp/*`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+				// 			if( error || stderr ) console.log( error )
+				// 			console.log( "Burst - Temp Files after stamp:\r\n" + stdout )
+				// 			resolve( stampedPage )
+				// 		} )
+				// 	} )
+				// } )
 				.then( stampedPage => {
 					return new Concat( pages.reduce( ( accum, item, index ) => {
 						let pageIndex = Stamp.pageIndex( item ),
