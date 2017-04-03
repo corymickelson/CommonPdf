@@ -53,20 +53,39 @@ class Stamp {
 		} )
 	}
 
+	/**
+	 * @desc Burst file into individual pages.
+	 *       Files written to /tmp with documentId prefix
+	 *
+	 * @returns {Promise}
+	 * @private
+	 *
+	 * @todo: The find operation will return an error for any file without x permission in /tmp directory
+	 *        the current work around is to ignore stderr in this process.
+	 *        Trying to grep filter 'Permission denied' has not yet worked.
+	 */
 	_burst() {
 		return new Promise( ( fulfill, reject ) => {
 			let documentId = path.basename( this.pdf, '.pdf' )
 			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`
 			exec( command, { shell: '/bin/sh' }, ( error, stdin, stderr ) => {
-				if( error || stderr ) reject( error )
-				else {
+				//if( error || stderr ) reject( error )
+				//else {
 					fulfill( stdin.split( '\n' )
 						.filter( x => x.length > 0 ) )
-				}
+				//}
 			} )
 		} )
 	}
 
+	/**
+	 * @desc Write new pdf with image stamp.
+	 *
+	 * @param {String} img - data uri
+	 * @param {Number} page - page index to apply image
+	 * @param {{width:Number, height:Number, x:Number, y:Number}} opts - stamp positioning
+	 * @returns {Promise<String>} - output file location
+	 */
 	write( img, page, opts ) {
 		let pages;
 		return new Promise( ( fulfill, reject ) => {
@@ -108,7 +127,11 @@ class Stamp {
 					}, [] ), this.out ).write()
 				} )
 				.then( final => {
-					fulfill( final )
+					Promise.all( pages.map( p => fs.unlink( p, err => {
+						if( err ) reject( err )
+						return Promise.resolve()
+					} ) ) )
+						.then( _ => { fulfill( final ) } )
 				} )
 				.catch( e => {
 					reject( e )
