@@ -4,8 +4,9 @@
 'use strict'
 const exec = require( 'child_process' ).exec,
 	fs = require( 'fs' ),
+	path = require( 'path' ),
 	PDFDocument = require( 'pdfkit' ),
-	id = require('uuid').v4,
+	id = require( 'uuid' ).v4,
 	Concat = require( './concat' ).Concat
 
 /**
@@ -28,7 +29,7 @@ class Stamp {
 	constructor( pdf, outfile ) {
 		this.pdf = pdf
 		this.target = null
-		this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
+		this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
 	}
 
 	/**
@@ -54,7 +55,8 @@ class Stamp {
 
 	_burst() {
 		return new Promise( ( fulfill, reject ) => {
-			let command = `pdftk ${this.pdf} burst && find -name "pg_*.pdf"`
+			let documentId = path.basename( this.pdf, '.pdf' )
+			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`
 			exec( command, { shell: '/bin/sh' }, ( error, stdin, stderr ) => {
 				if( error || stderr ) reject( error )
 				else {
@@ -72,18 +74,35 @@ class Stamp {
 			this._burst()
 				.then( burstPages => {
 					pages = burstPages
-					let pageString = page.toString()
-					if( pageString.length < 4 ) pageString = `0${page}`
+					let pageString = `pg_${page}.pdf`
 					this.target = pages.find( x => x.indexOf( pageString ) !== -1 )
 					return Promise.resolve()
 				} )
+				// .then( () => {
+				// 	return new Promise( ( resolve ) => {
+				// 		exec( `ls -lah -d /tmp/*`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+				// 			if( error || stderr ) console.log( error )
+				// 			console.log( "Burst - Temp Files before stamp:\r\n" + stdout )
+				// 			resolve()
+				// 		} )
+				// 	} )
+				// } )
 				.then( () => {
 					return this._stamp( img, { width: opts.width, height: opts.height, x: opts.x, y: opts.y } )
 				} )
+				// .then( ( stampedPage ) => {
+				// 	return new Promise( ( resolve ) => {
+				// 		exec( `ls -lah -d /tmp/*`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+				// 			if( error || stderr ) console.log( error )
+				// 			console.log( "Burst - Temp Files after stamp:\r\n" + stdout )
+				// 			resolve( stampedPage )
+				// 		} )
+				// 	} )
+				// } )
 				.then( stampedPage => {
 					return new Concat( pages.reduce( ( accum, item, index ) => {
 						let pageIndex = Stamp.pageIndex( item ),
-							targetIndex = Stamp.pageIndex(this.target)
+							targetIndex = Stamp.pageIndex( this.target )
 						accum[ pageIndex ] = pageIndex === targetIndex ? stampedPage : item
 						return accum
 					}, [] ), this.out ).write()
@@ -98,10 +117,7 @@ class Stamp {
 	}
 
 	static pageIndex( page ) {
-		let subject = page.substr( 5, 4 )
-		while( subject[ 0 ] === '0' ) {
-			subject = subject.substr( 1 )
-		}
+		let subject = page.split( "_" )[ 1 ]
 		return parseInt( subject ) - 1
 	}
 

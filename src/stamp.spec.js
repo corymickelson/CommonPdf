@@ -14,15 +14,20 @@ test( 'burst', t => {
 			t.plan( 1 )
 			t.equal( pages.length, 4 )
 		} )
+		.catch( ( err ) => console.log( err ) )
 } )
 test( 'page index', t => {
-	let indexTen = Subject.pageIndex( './pg_0011.pdf' ),
-		indexEight = Subject.pageIndex( './pg_0009.pdf' ),
-		indexNinetyNine = Subject.pageIndex( './pg_0100.pdf' ),
+	let indexOne = Subject.pageIndex( '/tmp/fw9-pg_1.pdf' ),
+		indexTwo = Subject.pageIndex( '/tmp/fw9-pg_2.pdf' ),
+		indexThree = Subject.pageIndex( '/tmp/fw9-pg_3.pdf' ),
+		indexFour = Subject.pageIndex( '/tmp/fw9-pg_4.pdf' ),
+		indexFourty = Subject.pageIndex( '/tmp/fw9-pg_40.pdf' ),
 		indexNineHundredNinetyNine = Subject.pageIndex( './pg_1000.pdf' )
-	t.equal( indexEight, 8 )
-	t.equal( indexTen, 10 )
-	t.equal( indexNinetyNine, 99 )
+	t.equal( indexOne, 0 )
+	t.equal( indexTwo, 1 )
+	t.equal( indexThree, 2 )
+	t.equal( indexFour, 3 )
+	t.equal( indexFourty, 39 )
 	t.equal( indexNineHundredNinetyNine, 999 )
 	t.end()
 } )
@@ -36,6 +41,8 @@ test( 'stamp', t => {
 			fs.exists( outFile, exists => {
 				t.true( exists )
 			} )
-		} )
+		} ).catch( ( err ) => {
+		console.log( err )
+	} )
 } )
 
