@@ -5,9 +5,3 @@ node_modules
 config.json
 .vscode
 typings
-src/digital-signature.js
-src/digital-signature.js.map
-src/digital-signature.spec.js
-src/digital-signature.spec.js.map
-src/setup.js
-src/setup.js.map
