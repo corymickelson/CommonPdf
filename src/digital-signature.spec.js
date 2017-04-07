@@ -4,9 +4,6 @@ const fs_1 = require("fs");
 const digital_signature_1 = require("./digital-signature");
 const test = require("tape");
 const path_1 = require("path");
-/**
- * Created by skyslope on 4/6/17.
- */
 process.env.SPEC = true;
 test('Digital signature', t => {
     t.plan(1);

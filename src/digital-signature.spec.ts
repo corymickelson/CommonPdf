@@ -2,9 +2,6 @@ import { exists, unlink } from "fs";
 import { DigitalSignature } from "./digital-signature";
 import * as test from 'tape'
 import { join } from "path";
-/**
- * Created by skyslope on 4/6/17.
- */
 
 process.env.SPEC = true
 
