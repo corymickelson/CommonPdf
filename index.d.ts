@@ -132,4 +132,6 @@ declare module 'commonpdf' {
 
 		write(): Promise<FilePath>
 	}
+
+	export function setup():void
 }
