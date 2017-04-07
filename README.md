@@ -128,15 +128,14 @@ on creating your own certificate.
 
 
 ## Todo
- - ~~pdf view portal (web component)~~ Moved to separate repo (CommonPdfComponent)
- - ~~code documentation~~ Added typescript definition file
  - contributor details
- - ~~expand tested pdf's~~ Added test-data directory for unit testing
  - add complete list of command line parameter options
  - add options documentation
  - improve README
- - file name parameter standardization (on the constructor or on the write())
  - better error handling, human readable error messages
+ - when digitally signing a document, add option to pass in password to prevent invalidating previous signature
+     - with pdftk `pdftk in.pdf output out.pdf owner_pw PASSWORD-HERE`
+     - with qpdf `qpdf --password=PASSWORD-HERE --decrypt in.pdf out.pdf`
 ## Run as Lambda
 
 Create a zip with

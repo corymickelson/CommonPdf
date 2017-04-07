@@ -29,6 +29,7 @@
   "homepage": "https://github.com/corymickelson/CommonPdf#readme",
   "devDependencies": {
     "@types/node": "^7.0.8",
+    "@types/uuid": "^2.0.29",
     "eslint": "^3.12.2",
     "eslint-plugin-jsdoc": "^2.4.0",
     "precommit-hook": "3.0.0",
@@ -41,7 +42,6 @@
     "uuid": "^3.0.1"
   },
   "pre-commit": [
-    "test",
     "lint"
   ]
 }

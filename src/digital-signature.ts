@@ -2,6 +2,7 @@ import { FilePath } from "commonpdf";
 import { exec } from "child_process";
 import { join } from "path";
 
+export type SigningOptions = { location: string, reason: string, passwd: string }
 /**
  * @desc Secure Pdf with digital signature.
  *      This class uses PortableSigner and requires java is installed on your path
@@ -11,7 +12,7 @@ import { join } from "path";
 export class DigitalSignature {
 	constructor( public pdf: FilePath,
 	             public cert: FilePath,
-	             public signOpts: { location: string, reason: string, passwd: string },
+	             public signOpts: SigningOptions,
 	             public outfile: FilePath ) {
 	}
 
