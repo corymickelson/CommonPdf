@@ -75,7 +75,7 @@ declare module 'commonpdf' {
 		fdf: FilePath
 		pdf: FilePath
 		out?: FilePath
-		options?: Array|Error
+		options?: Array<string>|Error
 
 		constructor( fdfFilePath: FilePath, pdfFilePath: FilePath, options?: Array<string>, outFile?:FilePath )
 
@@ -124,5 +124,12 @@ declare module 'commonpdf' {
 		private _burst(): Array<string>
 
 		static pageIndex( page: FilePath ): Number
+	}
+
+	export class DigitalSignature {
+		constructor( pdf: FilePath, cert: FilePath, signOpts: { location: string, reason: string, passwd: string },
+	             outfile: FilePath )
+
+		write(): Promise<FilePath>
 	}
 }

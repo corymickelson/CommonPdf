@@ -1,5 +1,11 @@
 {
   "globalDevDependencies": {
     "pdfkit": "registry:dt/pdfkit#0.7.2+20170310072738"
+  },
+  "globalDependencies": {
+    "uuid": "registry:dt/uuid#3.3.0+20160728152600"
+  },
+  "dependencies": {
+    "tape": "registry:dt/tape#4.2.2+20170207212605"
   }
 }

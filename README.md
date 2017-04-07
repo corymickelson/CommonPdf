@@ -1,7 +1,7 @@
 # Common Pdf
 
 
-CommonPdf wraps a small subset of **pdftk** aiming to provide performant pdf operations in node.js applications.
+CommonPdf wraps a small subset of command line pdf utilities [ **pdftk**, **PortableSigner** ] aiming to provide performant pdf operations in node.js applications.
 Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for setup are described below.
 
 
@@ -11,9 +11,24 @@ Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for
 - fillform
 - rotate
 - stamp
+- digital signing (x509 certificate)
 
 ## Getting Started
+All required binaries are provided in the bin directory (binaries are for linux). You may use what is provided
+or install separately.
+
+Self Install:
 - Install [pdftk](https://www.pdflabs.com/tools/pdftk-server/) and put on your path
+- Install [PortableSigner](http://portablesigner.sourceforge.net/) and put on your path
+
+Or use bin (AWS Lambda Only!)
+
+```javascript 
+import {setup} from "commonpdf"
+setup() 
+```
+Install CommonPdf
+
 - Install CommonPdf `npm i -S commonpdf`
 - Test pdftk & CommonPdf installation ```npm test```
 - Import only what you need
@@ -98,6 +113,18 @@ new Rotate(pdf, pageNumber, config)
     })
 
 ```
+
+#### Signing:
+CommonPdf DigitalSignature is just a wrapper around the command line PortableSigner java library.
+Signing requires an x509 certificate is provided. To create your own self signed x509:
+1. `openssl genrsa -out ca.key 4096`
+2. `openssl req -new -x509 -days 1826 -key ca.key -out ca.crt`
+3. `openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt`
+
+Click [here](https://blog.didierstevens.com/2008/12/30/howto-make-your-own-cert-with-openssl/) for further information 
+on creating your own certificate.
+
+
 
 ## Todo
  - ~~pdf view portal (web component)~~ Moved to separate repo (CommonPdfComponent)
