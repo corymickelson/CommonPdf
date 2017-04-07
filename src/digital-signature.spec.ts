@@ -14,8 +14,8 @@ test( 'Digital signature', t => {
 	const Subject = new DigitalSignature( join( __dirname, '../test-data/fw9.pdf' ),
 		join( __dirname, '../test-data/test-cert.pfx' ),
 		{
-			location: '825 K Street Sacramento CA',
-			reason: 'SkySlope',
+			location: '123 someplace ln.',
+			reason: 'Test',
 			passwd: '123456'
 		},
 		outfile )
