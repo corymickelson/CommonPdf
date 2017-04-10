@@ -14,11 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const uuid_1 = require("uuid");
 const fs = require("fs");
-var DigitalSignatureOption;
-(function (DigitalSignatureOption) {
-    DigitalSignatureOption[DigitalSignatureOption["Post"] = 0] = "Post";
-    DigitalSignatureOption[DigitalSignatureOption["Inline"] = 1] = "Inline";
-})(DigitalSignatureOption = exports.DigitalSignatureOption || (exports.DigitalSignatureOption = {}));
+const digital_signature_1 = require("./digital-signature");
 class Concat {
     constructor(docs, options, signOpts, outfile) {
         this.docs = docs;
@@ -43,27 +39,30 @@ class Concat {
             throw new Error('Can not concat and split. Try, concatenating first, and splitting afterwards.');
         this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4()}.pdf`;
         if (signOpts) {
-            if (signOpts.encrypt === DigitalSignatureOption.Inline) {
+            if (signOpts.encrypt === digital_signature_1.DigitalSignatureOption.Inline) {
+                this.signInline = true;
                 this.password = signOpts.config.options.passwd;
             }
             else {
+                this.postProcessSigning = true;
             }
         }
     }
     write() {
         return __awaiter(this, void 0, void 0, function* () {
+            let secure = this.signInline ? `owner_pw ${this.password}` : '', output = this.postProcessSigning ? `${this.out.substr(0, this.out.length - 4)}.unsigned.pdf` : this.out, command = `pdftk ${this.docs.join(' ')} cat ${this.options.join(" ")} output ${output} ${secure}`;
             yield new Promise((fulfill, reject) => {
-                let secure = this.signInline ? `owner_pw ${this.password}` : '', command = `pdftk ${this.docs.join(' ')} cat ${this.options.join(" ")} output ${this.out} ${secure}`;
                 child_process_1.exec(command, { shell: '/bin/sh' }, (error, stdout, stderr) => {
-                    error || stderr ? reject(error) : fulfill(this.out);
+                    error || stderr ? reject(error) : fulfill(output);
                 });
             });
             if (this.postProcessSigning) {
+                yield new digital_signature_1.DigitalSignature(output, this.signOpts.config.certificate, this.signOpts.config.options, this.out)
+                    .write();
             }
-            else
-                return this.out;
+            return this.out;
         });
     }
 }
-module.exports.Concat = Concat;
+exports.Concat = Concat;
 //# sourceMappingURL=concat.js.map

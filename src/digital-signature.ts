@@ -2,7 +2,19 @@ import { FilePath } from "commonpdf";
 import { exec } from "child_process";
 import { join } from "path";
 
-export type SigningOptions = { location: string, reason: string, passwd: string }
+export type SigningOptions = { location?: string, reason?: string, passwd: string }
+export type DigitalSignaturePostParams = {
+	certificate?: FilePath,
+	options: SigningOptions
+}
+export enum DigitalSignatureOption {
+	Post,
+	Inline
+}
+export type CommonPdfOptionalSignature = {
+	encrypt: DigitalSignatureOption,
+	config: DigitalSignaturePostParams
+}
 /**
  * @desc Secure Pdf with digital signature.
  *      This class uses PortableSigner and requires java is installed on your path

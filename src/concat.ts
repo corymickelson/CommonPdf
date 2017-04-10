@@ -7,28 +7,20 @@ import { exec } from 'child_process'
 import { v4 as id } from 'uuid'
 import { FilePath } from "commonpdf";
 import * as fs from "fs";
-import { SigningOptions } from "./digital-signature";
+import {
+	CommonPdfOptionalSignature, DigitalSignature, DigitalSignatureOption,
+	SigningOptions
+} from "./digital-signature";
 
-export type DigitalSignaturePostParams = {
-	certificate: FilePath,
-	options: SigningOptions
-}
-export enum DigitalSignatureOption {
-	Post,
-	Inline
-}
-export type CommonPdfOptionalSignature = {
-	encrypt: DigitalSignatureOption,
-	config: DigitalSignaturePostParams
-}
-class Concat {
+
+export class Concat {
 	public out: string
 	public signInline: boolean = false
-	public password:string
-	public postProcessSigning:boolean = false
+	public password: string
+	public postProcessSigning: boolean = false
 
 	constructor( public docs: Array<FilePath>,
-	             public options?: Array<{ start: number, end: number }>,
+	             public options?: Array<{ start: number, end: number | string }>,
 	             public signOpts?: CommonPdfOptionalSignature,
 	             outfile?: FilePath ) {
 
@@ -49,29 +41,34 @@ class Concat {
 
 		this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
 
-		if(signOpts) {
-			if(signOpts.encrypt === DigitalSignatureOption.Inline) {
+		if ( signOpts ) {
+			if ( signOpts.encrypt === DigitalSignatureOption.Inline ) {
+				this.signInline = true
 				this.password = signOpts.config.options.passwd
 			}
 			else {
-
+				this.postProcessSigning = true
 			}
 		}
 	}
 
 	async write(): Promise<FilePath> {
+		let secure = this.signInline ? `owner_pw ${this.password}` : '',
+			output = this.postProcessSigning ? `${this.out.substr( 0, this.out.length - 4 )}.unsigned.pdf` : this.out,
+			command = `pdftk ${this.docs.join( ' ' )} cat ${this.options.join( " " )} output ${output} ${secure}`
+
 		await new Promise( ( fulfill, reject ) => {
-			let secure = this.signInline ? `owner_pw ${this.password}` : '',
-				command = `pdftk ${this.docs.join( ' ' )} cat ${this.options.join( " " )} output ${this.out} ${secure}`
 			exec( command, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
-				error || stderr ? reject( error ) : fulfill( this.out )
+				error || stderr ? reject( error ) : fulfill( output )
 			} )
 		} )
-		if(this.postProcessSigning) {
-			
+
+		if ( this.postProcessSigning ) {
+			await new DigitalSignature( output , this.signOpts.config.certificate, this.signOpts.config.options, this.out )
+				.write()
 		}
-		else return this.out
+
+		return this.out
 	}
 }
 
-module.exports.Concat = Concat

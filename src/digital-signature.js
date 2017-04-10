@@ -10,6 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const path_1 = require("path");
+var DigitalSignatureOption;
+(function (DigitalSignatureOption) {
+    DigitalSignatureOption[DigitalSignatureOption["Post"] = 0] = "Post";
+    DigitalSignatureOption[DigitalSignatureOption["Inline"] = 1] = "Inline";
+})(DigitalSignatureOption = exports.DigitalSignatureOption || (exports.DigitalSignatureOption = {}));
 /**
  * @desc Secure Pdf with digital signature.
  *      This class uses PortableSigner and requires java is installed on your path
