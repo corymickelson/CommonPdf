@@ -68,8 +68,18 @@ test( 'Throws exception on mismatched inputs', t => {
 				fieldvalue: true
 			} ],
 		FDFGenerator = new Subject( '../test-data/fw9.pdf', fieldValues )
-	t.equal(assert.throws(FDFGenerator._validate), undefined, 'Assert an exception has been thrown')
-	t.end()
+	FDFGenerator._validate()
+		.then(() => {
+			console.log('here')
+			t.fail()
+			t.end()
+		})
+		.catch(e => {
+			console.error(e)
+			t.equal('mismatched field name mapping', e.message)
+			t.end()
+		})
+	//t.equal(assert.throws(() => {FDFGenerator._validate()}), undefined, 'Assert an exception has been thrown')
 } )
 
 test('throws exception on invalid constructor arguments', t => {

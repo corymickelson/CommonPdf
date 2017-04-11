@@ -1,47 +1,39 @@
-'use strict'
-const fs = require( 'fs' ),
-	exec = require( 'child_process' ).exec,
-	join = require( 'path' ).join,
-	id = require( 'uuid' ).v4
-
+'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const path_1 = require("path");
+const child_process_1 = require("child_process");
+const uuid_1 = require("uuid");
 /**
  * @property {String} out - output file path. This module assums execution in aws lambda environment.
  *      The passed in pdf file should be a unique s3 file name (key). If it is not this file could
  *      potentially be over-written be a subsequent call.
  */
 class FillForm {
-	/**
-	 * @param {String} fdfFilePath - fdf file path
-	 * @param {String} pdfFilePath - pdf file path
-	 * @param {Array} [options] - Available options: flatten, more to come....
-	 * @param {String} [outfile] - output file path
-	 * @todo Add check that files exist
-	 */
-	constructor( fdfFilePath, pdfFilePath, options, outfile ) {
-		this.fdf = fdfFilePath
-		this.pdf = fs.existsSync( pdfFilePath.substr( 0, 4 ) === '/tmp' ? pdfFilePath : join( __dirname, pdfFilePath ) ) ? //eslint-disable-line
-			pdfFilePath.substr( 0, 4 ) === '/tmp' ? pdfFilePath : join( __dirname, pdfFilePath ) :
-			new Error( 'pdf file not found' )
-		this.out = `/tmp/${outfile || id()}.pdf`
-		if( options && !Array.isArray( options ) ) throw new Error( 'Options must be in Array format' )
-		this.options = options || []
-	}
-
-	/**
-	 *
-	 * @returns {Promise<String>} - filled pdf file path
-	 */
-	write() {
-		return new Promise( ( fulfill, reject ) => {
-			let command = `pdftk ${this.pdf} fill_form ${this.fdf} output ${this.out} ${
-				this.options.join( " " ).toLowerCase()}`
-			exec( command, { shell: '/bin/sh' },
-				( error, stdout, stderr ) => {
-					if( error || stderr ) reject( error )
-					else fulfill( this.out )
-				} )
-		} )
-	}
+    constructor(fdfFilePath, pdfFilePath, options = [], outfile) {
+        FillForm._validateConstructor(pdfFilePath, options);
+        this.fdf = fdfFilePath;
+        this.pdf = pdfFilePath.substr(0, 4) === '/tmp' ? pdfFilePath : path_1.join(__dirname, pdfFilePath);
+        this.out = `/tmp/${outfile || uuid_1.v4()}.pdf`;
+        this.options = options || [];
+    }
+    static _validateConstructor(pdfFilePath, options) {
+        if (!fs_1.existsSync(pdfFilePath.substr(0, 4) === '/tmp' ? pdfFilePath : path_1.join(__dirname, pdfFilePath)))
+            throw Error('Pdf file not found');
+        if (!Array.isArray(options))
+            throw Error("options must be an array");
+    }
+    write() {
+        return new Promise((fulfill, reject) => {
+            let command = `pdftk ${this.pdf} fill_form ${this.fdf} output ${this.out} ${this.options.join(" ").toLowerCase()}`;
+            child_process_1.exec(command, { shell: '/bin/sh' }, (error, stdout, stderr) => {
+                if (error || stderr)
+                    reject(error);
+                else
+                    fulfill(this.out);
+            });
+        });
+    }
 }
-
-module.exports.FillForm = FillForm
+exports.FillForm = FillForm;
+//# sourceMappingURL=fillform.js.map
