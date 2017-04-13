@@ -4,6 +4,7 @@ export declare type ImgOpts = {
     y: number;
     width: number;
     height: number;
+    uri: string;
 };
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
@@ -24,14 +25,13 @@ export declare class Stamp {
      * @param {String} pdf - pdf file path
      * @param {String} [outfile] - out put file location. Defaults to /tmp
      */
-    constructor(pdf: FilePath, outfile: FilePath);
+    constructor(pdf: FilePath, outfile?: FilePath);
     /**
      * @desc Generates a new pdf with image at the provided coordinates and dimensions
-     * @param {String} img - data url
-     * @param {{x:Number, y:Number, width:Number, height:Number}} opts -
+     * @param {{x:Number, y:Number, width:Number, height:Number}} imgs -
      * @return {Promise<String>} -
      */
-    _stamp(img: string, opts: ImgOpts): Promise<string>;
+    _stamp(imgs: Array<ImgOpts>): Promise<string>;
     /**
      * @desc Burst file into individual pages.
      *       Files written to /tmp with documentId prefix
@@ -47,11 +47,10 @@ export declare class Stamp {
     /**
      * @desc Write new pdf with image stamp.
      *
-     * @param {String} img - data uri
      * @param {Number} page - page index to apply image
-     * @param {{width:Number, height:Number, x:Number, y:Number}} opts - stamp positioning
+     * @param {{width:Number, height:Number, x:Number, y:Number}} srcs - stamp positioning
      * @returns {Promise<String>} - output file location
      */
-    write(img: string, page: number, opts: ImgOpts): Promise<string>;
+    write(page: number, srcs: Array<ImgOpts>): Promise<string>;
     static pageIndex(page: string): number;
 }

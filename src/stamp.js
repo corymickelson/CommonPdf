@@ -33,14 +33,15 @@ class Stamp {
     }
     /**
      * @desc Generates a new pdf with image at the provided coordinates and dimensions
-     * @param {String} img - data url
-     * @param {{x:Number, y:Number, width:Number, height:Number}} opts -
+     * @param {{x:Number, y:Number, width:Number, height:Number}} imgs -
      * @return {Promise<String>} -
      */
-    _stamp(img, opts) {
+    _stamp(imgs) {
         return new Promise((fulfill, reject) => {
             let out = `/tmp/${uuid_1.v4()}.pdf`, placeholderStampPdf = `/tmp/${uuid_1.v4()}.pdf`, tmpPdf = new PDFDocument();
-            tmpPdf.image(img, opts.x, opts.y, { width: opts.width, height: opts.height });
+            imgs.forEach(({ uri, height, width, x, y }) => {
+                tmpPdf.image(uri, x, y, { width, height });
+            });
             tmpPdf.pipe(fs_1.createWriteStream(out));
             tmpPdf.end();
             child_process_1.exec(`pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, (error, stdout, stderr) => {
@@ -75,12 +76,11 @@ class Stamp {
     /**
      * @desc Write new pdf with image stamp.
      *
-     * @param {String} img - data uri
      * @param {Number} page - page index to apply image
-     * @param {{width:Number, height:Number, x:Number, y:Number}} opts - stamp positioning
+     * @param {{width:Number, height:Number, x:Number, y:Number}} srcs - stamp positioning
      * @returns {Promise<String>} - output file location
      */
-    write(img, page, opts) {
+    write(page, srcs) {
         let pages;
         return new Promise((fulfill, reject) => {
             if (!page || typeof page !== 'number')
@@ -93,7 +93,7 @@ class Stamp {
                 return Promise.resolve();
             })
                 .then(() => {
-                return this._stamp(img, { width: opts.width, height: opts.height, x: opts.x, y: opts.y });
+                return this._stamp(srcs);
             })
                 .then(stampedPage => {
                 return new concat_1.Concat(pages.reduce((accum, item, index) => {

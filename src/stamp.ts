@@ -11,7 +11,7 @@ import * as PDFDocument from 'pdfkit'
 import { basename } from "path";
 
 
-export type ImgOpts = { x: number, y: number, width: number, height: number }
+export type ImgOpts = { x: number, y: number, width: number, height: number, uri: string }
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
  *
@@ -31,7 +31,7 @@ export class Stamp {
 	 * @param {String} pdf - pdf file path
 	 * @param {String} [outfile] - out put file location. Defaults to /tmp
 	 */
-	constructor( public pdf: FilePath, outfile: FilePath ) {
+	constructor( public pdf: FilePath, outfile?: FilePath ) {
 		this.pdf = pdf
 		this.target = null
 		this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
@@ -39,16 +39,17 @@ export class Stamp {
 
 	/**
 	 * @desc Generates a new pdf with image at the provided coordinates and dimensions
-	 * @param {String} img - data url
-	 * @param {{x:Number, y:Number, width:Number, height:Number}} opts -
+	 * @param {{x:Number, y:Number, width:Number, height:Number}} imgs -
 	 * @return {Promise<String>} -
 	 */
-	_stamp( img: string, opts: ImgOpts ): Promise<string> {
+	_stamp( imgs: Array<ImgOpts> ): Promise<string> {
 		return new Promise( ( fulfill, reject ) => {
 			let out = `/tmp/${id()}.pdf`,
 				placeholderStampPdf = `/tmp/${id()}.pdf`,
 				tmpPdf = new PDFDocument()
-			tmpPdf.image( img, opts.x, opts.y, { width: opts.width, height: opts.height } )
+			imgs.forEach( ( { uri, height, width, x, y } ) => {
+				tmpPdf.image( uri, x, y, { width, height } )
+			} )
 			tmpPdf.pipe( createWriteStream( out ) )
 			tmpPdf.end()
 			exec( `pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
@@ -83,12 +84,11 @@ export class Stamp {
 	/**
 	 * @desc Write new pdf with image stamp.
 	 *
-	 * @param {String} img - data uri
 	 * @param {Number} page - page index to apply image
-	 * @param {{width:Number, height:Number, x:Number, y:Number}} opts - stamp positioning
+	 * @param {{width:Number, height:Number, x:Number, y:Number}} srcs - stamp positioning
 	 * @returns {Promise<String>} - output file location
 	 */
-	write( img: string, page: number, opts: ImgOpts ): Promise<string> {
+	write( page: number, srcs: Array<ImgOpts> ): Promise<string> {
 		let pages;
 		return new Promise( ( fulfill, reject ) => {
 			if ( !page || typeof page !== 'number' ) reject( 'Page number required.' )
@@ -100,7 +100,7 @@ export class Stamp {
 					return Promise.resolve()
 				} )
 				.then( () => {
-					return this._stamp( img, { width: opts.width, height: opts.height, x: opts.x, y: opts.y } )
+					return this._stamp( srcs )
 				} )
 				.then( stampedPage => {
 					return new Concat( pages.reduce( ( accum, item, index ) => {

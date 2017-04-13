@@ -31,9 +31,22 @@ test( 'page index', t => {
 	t.equal( indexNineHundredNinetyNine, 999 )
 	t.end()
 } )
-test( 'stamp', t => {
-	let stamp = new Subject( join( __dirname, '../test-data/fw9.pdf' ) )
-	stamp.write( dataImg, 1, { width: 200, height: 75, x: 140, y: 490 } )
+test( 'stamp multiple images', t => {
+	let stamp = new Subject( join( __dirname, '../test-data/fw9.pdf' ) ),
+		srcs = [ {
+			uri: dataImg,
+			x: 140,
+			y: 490,
+			width: 200,
+			height: 75
+		}, {
+			uri: dataImg,
+			x: 240,
+			y: 590,
+			width: 200,
+			height: 75
+		} ]
+	stamp.write( 1, srcs )
 		.then( outFile => {
 			t.plan( 6 );
 			[ '/tmp/fw9-pg_1.pdf', '/tmp/fw9-pg_2.pdf', '/tmp/fw9-pg_3.pdf', '/tmp/fw9-pg_4.pdf' ].forEach( page => {
