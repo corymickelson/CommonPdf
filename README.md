@@ -4,7 +4,7 @@
 CommonPdf wraps a small subset of command line pdf utilities [ **pdftk**, **PortableSigner** ] aiming to provide performant pdf operations in node.js applications.
 Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for setup are described below.
 
-example AWS Lambda usage [AWS-sign-pdf](https://github.com/corymickelson/AWS-sign-pdf)
+example AWS Lambda usage [CommonPdf Example](https://github.com/corymickelson/CommonPdf-Example)
 
 ## API
 
