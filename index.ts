@@ -20,7 +20,8 @@ export const Concat = concat,
 	setup = binaryPath,
 	Fix = fix,
 	DigitalSignatureOption = dsOpts,
-	Rotate = rotate
+	Rotate = rotate,
+	Stamp = stamp
 
 export type FilePath = string
 

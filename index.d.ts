@@ -5,5 +5,6 @@ import { DigitalSignature as ds, DigitalSignatureOption as dsOpts } from './src/
 import { setup as binaryPath } from './src/setup';
 import { Fix as fix } from './src/fix';
 import { Rotate as rotate } from './src/rotate';
-export declare const Concat: typeof concat, FillForm: typeof fillForm, FDFGenerator: typeof generator, PdfData: typeof generator._extractFieldNames, DigitalSignature: typeof ds, setup: typeof binaryPath, Fix: typeof fix, DigitalSignatureOption: typeof dsOpts, Rotate: typeof rotate;
+import { Stamp as stamp } from './src/stamp';
+export declare const Concat: typeof concat, FillForm: typeof fillForm, FDFGenerator: typeof generator, PdfData: typeof generator._extractFieldNames, DigitalSignature: typeof ds, setup: typeof binaryPath, Fix: typeof fix, DigitalSignatureOption: typeof dsOpts, Rotate: typeof rotate, Stamp: typeof stamp;
 export declare type FilePath = string;
