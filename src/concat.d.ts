@@ -1,4 +1,4 @@
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 import { CommonPdfOptionalSignature } from "./digital-signature";
 export declare class Concat {
     docs: Array<FilePath>;

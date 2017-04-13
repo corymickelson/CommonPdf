@@ -5,7 +5,7 @@
 
 import { exec } from 'child_process'
 import { v4 as id } from 'uuid'
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 import * as fs from "fs";
 import {
 	CommonPdfOptionalSignature, DigitalSignature, DigitalSignatureOption,
