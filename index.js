@@ -1,35 +1,20 @@
-'use strict'
-/**
- *
- * @type {Concat}
- */
-module.exports.Concat = require( './src/concat' ).Concat
+'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+const concat_1 = require("./src/concat");
+const fillform_1 = require("./src/fillform");
+const fdf_generator_1 = require("./src/fdf-generator");
+const digital_signature_1 = require("./src/digital-signature");
+const setup_1 = require("./src/setup");
+const fix_1 = require("./src/fix");
+exports.Concat = concat_1.Concat, exports.FillForm = fillform_1.FillForm, exports.FDFGenerator = fdf_generator_1.FDFGenerator, exports.PdfData = fdf_generator_1.PdfData, exports.DigitalSignature = digital_signature_1.DigitalSignature, exports.setup = setup_1.setup, exports.Fix = fix_1.Fix;
 /**
  *
  * @type {Rotate}
  */
-module.exports.Rotate = require( './src/rotate' ).Rotate
+module.exports.Rotate = require('./src/rotate').Rotate;
 /**
  *
  * @type {Stamp}
  */
-module.exports.Stamp = require( './src/stamp' ).Stamp
-/**
- *
- * @type {FillForm}
- */
-module.exports.FillForm = require( './src/fillform' ).FillForm
-/**
- *
- * @type {FDFGenerator}
- */
-module.exports.FDFGenerator = require( './src/fdf-generator' ).FDFGenerator
-/**
- *
- * @type {DigitalSignature}
- */
-module.exports.DigitalSignature = require('./src/digital-signature').DigitalSignature
-
-module.exports.setup = require('./src/setup').setup
-
-module.exports.Fix = require('./src/fix').Fix
+module.exports.Stamp = require('./src/stamp').Stamp;
+//# sourceMappingURL=index.js.map

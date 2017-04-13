@@ -165,7 +165,7 @@ sudo make -f Makefile.Redhat install
 
 Then I copied the resulting `pdftk` binary and `/usr/lib64/libgcj.so.10` shared library into the `bin/` directory of my Lambda project.
 
-The entry point to the lambda function, `index.js`, alters the `PATH` and `LD_LIBRARY_PATH` environment variables to let the system know where to find the binary and the GCJ dependency.
+The entry point to the lambda function, `index.ts`, alters the `PATH` and `LD_LIBRARY_PATH` environment variables to let the system know where to find the binary and the GCJ dependency.
 
 ## Using PDFtk in Amazon Linux
 

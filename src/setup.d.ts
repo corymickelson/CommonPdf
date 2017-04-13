@@ -1,4 +1,1 @@
-/**
- * Created by skyslope on 4/7/17.
- */
-export declare function setup(): void;
+export declare function setup(): Promise<void | Error>;
