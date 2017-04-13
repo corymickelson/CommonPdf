@@ -9,6 +9,8 @@ import {
 import { DigitalSignature as ds, DigitalSignatureOption as dsOpts } from './src/digital-signature'
 import { setup as binaryPath } from './src/setup'
 import { Fix as fix } from './src/fix'
+import { Rotate as rotate } from './src/rotate'
+import { Stamp as stamp } from './src/stamp'
 
 export const Concat = concat,
 	FillForm = fillForm,
@@ -17,17 +19,8 @@ export const Concat = concat,
 	DigitalSignature = ds,
 	setup = binaryPath,
 	Fix = fix,
-	DigitalSignatureOption = dsOpts
+	DigitalSignatureOption = dsOpts,
+	Rotate = rotate
 
 export type FilePath = string
 
-/**
- *
- * @type {Rotate}
- */
-module.exports.Rotate = require( './src/rotate' ).Rotate
-/**
- *
- * @type {Stamp}
- */
-module.exports.Stamp = require( './src/stamp' ).Stamp
