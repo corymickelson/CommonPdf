@@ -30,7 +30,7 @@ export class FDFGenerator {
 		this.out = `/tmp/${id()}.fdf`
 	}
 
-	static _constructorValidations( pdf: string, values: FDFFieldsMap ) {
+	private static _constructorValidations( pdf: string, values: FDFFieldsMap ) {
 		if ( typeof pdf !== 'string' || !Array.isArray( values ) ) throw new TypeError()
 		if ( !existsSync( pdf.substr( 0, 4 ) === '/tmp' ? pdf : join( __dirname, pdf ) ) ) {
 			throw new Error( 'pdf file not found' )
@@ -65,7 +65,7 @@ export class FDFGenerator {
 		else return titles
 	}
 
-	_write( fdfMap: FDFFieldsMap ): Promise<FilePath> {
+	private _write( fdfMap: FDFFieldsMap ): Promise<FilePath> {
 		let lines = [ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ].join( '\n')
 		return new Promise<string>( ( fulfill, reject ) => {
 			writeFile( this.out, lines,
@@ -76,11 +76,11 @@ export class FDFGenerator {
 		} )
 	}
 
-	static _fieldWriter( field ) {
+	private static _fieldWriter( field ) {
 		return `<< /T (${field.fieldname}) /V (${field.fieldvalue}) >>`
 	}
 
-	_checkAg(): Promise<boolean> {
+	private _checkAg(): Promise<boolean> {
 		return new Promise( fulfill => {
 			exec( 'ag -h', { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
 				if ( error || stderr ) fulfill( false )
@@ -116,7 +116,7 @@ export class FDFGenerator {
 		} )
 	}
 
-	_assignments( fields: FDFFieldsMap ): FDFFieldsMap {
+	private _assignments( fields: FDFFieldsMap ): FDFFieldsMap {
 		return fields.reduce<FDFFieldsMap>( ( accum, field, index ) => {
 			let dataField = this.pdfData.find( x => x[ 'FieldName' ] === field.fieldname ),
 				writeValue = field.fieldvalue

@@ -31,3 +31,5 @@ module.exports.FDFGenerator = require( './src/fdf-generator' ).FDFGenerator
 module.exports.DigitalSignature = require('./src/digital-signature').DigitalSignature
 
 module.exports.setup = require('./src/setup').setup
+
+module.exports.Fix = require('./src/fix').Fix

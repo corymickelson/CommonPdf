@@ -133,5 +133,10 @@ declare module 'commonpdf' {
 		write(): Promise<FilePath>
 	}
 
+	export class Fix {
+		constructor(pdf:FilePath, outfile:FilePath)
+		write(): Promise<string>
+	}
+
 	export function setup():void
 }
