@@ -1,11 +1,11 @@
 'use strict'
 import { join } from "path";
-import { existsSync, writeFile } from 'fs'
+import {existsSync, writeFile} from 'fs'
 import { v4 as id } from 'uuid'
 import { exec } from 'child_process'
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 
-export type FDFField = { fieldname: string, fieldvalue: string | number }
+export type FDFField = { fieldname: string, fieldvalue: string | number | boolean }
 export type FDFFieldsMap = Array<FDFField>
 export type FieldAnnotations = {
 	FieldType?: string,
@@ -68,9 +68,7 @@ export class FDFGenerator {
 	private _write( fdfMap: FDFFieldsMap ): Promise<FilePath> {
 		let lines = [ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ].join( '\n')
 		return new Promise<string>( ( fulfill, reject ) => {
-			writeFile( this.out, lines,
-				'utf8',
-				err => {
+			writeFile( this.out, lines, {encoding: 'utf8'}, (err:Error) => {
 					err ? reject( err ) : fulfill( this.out )
 				} )
 		} )
@@ -82,7 +80,7 @@ export class FDFGenerator {
 
 	private _checkAg(): Promise<boolean> {
 		return new Promise( fulfill => {
-			exec( 'ag -h', { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+			exec( 'ag -h', ( error, stdout, stderr ) => {
 				if ( error || stderr ) fulfill( false )
 				else fulfill( true )
 			} )
@@ -92,7 +90,7 @@ export class FDFGenerator {
 
 	static _extractFieldNames( pdf: string ): Promise<[ FieldAnnotations ]> {
 		return new Promise( ( fulfill, reject ) => {
-			exec( `pdftk ${pdf} dump_data_fields`, { shell: '/bin/sh' }, ( err, stdout, stderr ) => {
+			exec( `pdftk ${pdf} dump_data_fields`, ( err, stdout, stderr ) => {
 				if ( err ) reject( err )
 				if ( stdout === '' ) fulfill( [] )
 				fulfill( stdout.split( '---' )

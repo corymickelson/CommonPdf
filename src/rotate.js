@@ -24,7 +24,7 @@ class Rotate {
                 fulfill(`1${this.direction} 2-end`);
             else {
                 let command = `pdftk ${this.source} dump_data | grep -i NumberOfPages`;
-                child_process_1.exec(command, { shell: '/bin/sh' }, (error, stdin, stderr) => {
+                child_process_1.exec(command, (error, stdin, stderr) => {
                     if (error || stderr)
                         reject(error);
                     let pageCount = parseInt(stdin.substr(stdin.indexOf(':') + 2), stdin.indexOf('\n'));
@@ -47,7 +47,7 @@ class Rotate {
             this._cat(this.target)
                 .then(x => {
                 let command = `pdftk ${this.source} cat ${x} output ${this.out} `;
-                child_process_1.exec(command, { shell: '/bin/sh' }, (error, stdin, stderr) => {
+                child_process_1.exec(command, (error, stdin, stderr) => {
                     if (error || stderr)
                         reject(error);
                     else

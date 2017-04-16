@@ -1,4 +1,4 @@
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 export declare type SigningOptions = {
     location?: string;
     reason?: string;

@@ -44,7 +44,7 @@ class Stamp {
             });
             tmpPdf.pipe(fs_1.createWriteStream(out));
             tmpPdf.end();
-            child_process_1.exec(`pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, (error, stdout, stderr) => {
+            child_process_1.exec(`pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, (error, stdout, stderr) => {
                 if (error || stderr)
                     reject(error);
                 else
@@ -67,7 +67,7 @@ class Stamp {
         return new Promise((fulfill, reject) => {
             let documentId = path_1.basename(this.pdf, '.pdf');
             let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`;
-            child_process_1.exec(command, { shell: '/bin/sh' }, (error, stdin, stderr) => {
+            child_process_1.exec(command, (error, stdin, stderr) => {
                 fulfill(stdin.split('\n')
                     .filter(x => x.length > 0));
             });

@@ -59,7 +59,7 @@ class FDFGenerator {
     _write(fdfMap) {
         let lines = [this.header, ...fdfMap.map(f => FDFGenerator._fieldWriter(f)), this.footer].join('\n');
         return new Promise((fulfill, reject) => {
-            fs_1.writeFile(this.out, lines, 'utf8', err => {
+            fs_1.writeFile(this.out, lines, { encoding: 'utf8' }, (err) => {
                 err ? reject(err) : fulfill(this.out);
             });
         });
@@ -69,7 +69,7 @@ class FDFGenerator {
     }
     _checkAg() {
         return new Promise(fulfill => {
-            child_process_1.exec('ag -h', { shell: '/bin/sh' }, (error, stdout, stderr) => {
+            child_process_1.exec('ag -h', (error, stdout, stderr) => {
                 if (error || stderr)
                     fulfill(false);
                 else
@@ -79,7 +79,7 @@ class FDFGenerator {
     }
     static _extractFieldNames(pdf) {
         return new Promise((fulfill, reject) => {
-            child_process_1.exec(`pdftk ${pdf} dump_data_fields`, { shell: '/bin/sh' }, (err, stdout, stderr) => {
+            child_process_1.exec(`pdftk ${pdf} dump_data_fields`, (err, stdout, stderr) => {
                 if (err)
                     reject(err);
                 if (stdout === '')

@@ -52,7 +52,7 @@ export class Stamp {
 			} )
 			tmpPdf.pipe( createWriteStream( out ) )
 			tmpPdf.end()
-			exec( `pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, { shell: '/bin/sh' }, ( error, stdout, stderr ) => {
+			exec( `pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, ( error, stdout, stderr ) => {
 				if ( error || stderr ) reject( error )
 				else fulfill( placeholderStampPdf )
 			} )
@@ -74,7 +74,7 @@ export class Stamp {
 		return new Promise( ( fulfill, reject ) => {
 			let documentId = basename( this.pdf, '.pdf' )
 			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`
-			exec( command, { shell: '/bin/sh' }, ( error, stdin, stderr ) => {
+			exec( command, ( error, stdin, stderr ) => {
 				fulfill( stdin.split( '\n' )
 					.filter( x => x.length > 0 ) )
 			} )

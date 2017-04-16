@@ -1,7 +1,7 @@
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 export declare type FDFField = {
     fieldname: string;
-    fieldvalue: string | number;
+    fieldvalue: string | number | boolean;
 };
 export declare type FDFFieldsMap = Array<FDFField>;
 export declare type FieldAnnotations = {

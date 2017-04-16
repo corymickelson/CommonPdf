@@ -3,11 +3,11 @@ import {existsSync} from 'fs'
 import {join} from 'path'
 import {exec} from 'child_process'
 import {v4 as id} from 'uuid'
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 
 
 /**
- * @property {String} out - output file path. This module assums execution in aws lambda environment.
+ * @property {String} out - output file path. This module assumes execution in aws lambda environment.
  *      The passed in pdf file should be a unique s3 file name (key). If it is not this file could
  *      potentially be over-written be a subsequent call.
  */
@@ -35,7 +35,7 @@ export class FillForm {
 		return new Promise( ( fulfill, reject ) => {
 			let command = `pdftk ${this.pdf} fill_form ${this.fdf} output ${this.out} ${
 				this.options.join( " " ).toLowerCase()}`
-			exec( command, { shell: '/bin/sh' },
+			exec( command,
 				( error, stdout, stderr ) => {
 					if( error || stderr ) reject( error )
 					else fulfill( this.out )

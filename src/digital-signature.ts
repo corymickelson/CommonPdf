@@ -1,4 +1,4 @@
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 import { exec } from "child_process";
 import { join } from "path";
 
