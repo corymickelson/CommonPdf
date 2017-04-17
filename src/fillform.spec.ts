@@ -1,6 +1,5 @@
 'use strict'
 import * as test from 'tape'
-import {join} from 'path'
 import {FDFGenerator as Subject, PdfData} from './fdf-generator'
 import {FillForm} from './fillform'
 
