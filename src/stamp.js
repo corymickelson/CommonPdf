@@ -7,13 +7,12 @@ const child_process_1 = require("child_process");
 const uuid_1 = require("uuid");
 const concat_1 = require("./concat");
 const fs_1 = require("fs");
-const PDFDocument = require("pdfkit");
+const Pdf = require("pdfkit");
 const path_1 = require("path");
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
  *
  * @class Stamp
- * @borrows PDFDocument
  * @property {String} pdf
  * @property {String} image
  * @property {{x:Number, y:Number}} coordinates
@@ -38,7 +37,7 @@ class Stamp {
      */
     _stamp(imgs) {
         return new Promise((fulfill, reject) => {
-            let out = `/tmp/${uuid_1.v4()}.pdf`, placeholderStampPdf = `/tmp/${uuid_1.v4()}.pdf`, tmpPdf = new PDFDocument();
+            let out = `/tmp/${uuid_1.v4()}.pdf`, placeholderStampPdf = `/tmp/${uuid_1.v4()}.pdf`, tmpPdf = new Pdf();
             imgs.forEach(({ uri, height, width, x, y }) => {
                 tmpPdf.image(uri, x, y, { width, height });
             });
@@ -49,6 +48,30 @@ class Stamp {
                     reject(error);
                 else
                     fulfill(placeholderStampPdf);
+            });
+        });
+    }
+    static createLink(link, opt) {
+        return new Promise((fulfill, reject) => {
+            const linkDocument = new Pdf(), outLink = `/tmp/${uuid_1.v4()}-link.pdf`;
+            linkDocument.pipe(fs_1.createWriteStream(outLink));
+            if (opt) {
+                // set font
+            }
+            linkDocument.text(link.text, link.x, link.y, { link: link.link });
+            fulfill({ doc: linkDocument, out: outLink });
+        });
+    }
+    /**
+     *
+     * @param sources if multi stamp this is a multi PAGE pdf where each page is stamped to the target pdf
+     * @returns {Promise<string>} - out file path
+     */
+    multiStamp(sources) {
+        return new Promise((fulfill, reject) => {
+            let out = `/tmp/${uuid_1.v4()}.pdf`;
+            child_process_1.exec(`pdftk ${this.target} multistamp ${sources} output ${out}`, (err, stdout, stderr) => {
+                (err || stderr) ? reject(err) : fulfill(out);
             });
         });
     }
@@ -75,7 +98,7 @@ class Stamp {
     }
     /**
      * @desc Write new pdf with image stamp.
-     *
+     * @todo: Use pdftk multi-stamp instead of stamp
      * @param {Number} page - page index to apply image
      * @param {{width:Number, height:Number, x:Number, y:Number}} srcs - stamp positioning
      * @returns {Promise<String>} - output file location
