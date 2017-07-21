@@ -1,4 +1,4 @@
-import { FilePath } from "commonpdf";
+import { FilePath } from "../index";
 /**
  * Created by skyslope on 4/12/17.
  */
