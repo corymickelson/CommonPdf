@@ -43,7 +43,7 @@ export declare class Stamp {
      *        the current work around is to ignore stderr in this process.
      *        Trying to grep filter 'Permission denied' has not yet worked.
      */
-    _burst(): Promise<string>;
+    _burst(): Promise<string[]>;
     /**
      * @desc Write new pdf with image stamp.
      *

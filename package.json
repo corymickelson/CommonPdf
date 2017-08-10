@@ -1,6 +1,6 @@
 {
   "name": "commonpdf",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Pdf utility library",
   "main": "index.js",
   "types": "index.d.ts",
@@ -35,7 +35,7 @@
     "precommit-hook": "3.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
-    "typescript": "^2.2.2"
+    "typescript": "^2.4"
   },
   "dependencies": {
     "pdfkit": "^0.8.0",

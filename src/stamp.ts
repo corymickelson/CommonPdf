@@ -70,7 +70,7 @@ export class Stamp {
 	 *        the current work around is to ignore stderr in this process.
 	 *        Trying to grep filter 'Permission denied' has not yet worked.
 	 */
-	_burst(): Promise<string> {
+	_burst(): Promise<string[]> {
 		return new Promise( ( fulfill, reject ) => {
 			let documentId = basename( this.pdf, '.pdf' )
 			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`
