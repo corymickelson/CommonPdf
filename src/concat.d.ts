@@ -1,12 +1,15 @@
 import { FilePath } from "../index";
-import { CommonPdfOptionalSignature } from "./digital-signature";
+import { SignOptions } from './sign';
 export declare class Concat {
     docs: Array<FilePath>;
     options: Array<{
         start: number;
         end: number | string;
     }>;
-    signOpts: CommonPdfOptionalSignature;
+    signOpts: SignOptions & {
+        cert: FilePath;
+        key: FilePath;
+    };
     out: string;
     signInline: boolean;
     password: string;
@@ -14,6 +17,9 @@ export declare class Concat {
     constructor(docs: Array<FilePath>, options?: Array<{
         start: number;
         end: number | string;
-    }>, signOpts?: CommonPdfOptionalSignature, outfile?: FilePath);
+    }>, signOpts?: SignOptions & {
+        cert: FilePath;
+        key: FilePath;
+    }, outfile?: FilePath);
     write(): Promise<FilePath>;
 }

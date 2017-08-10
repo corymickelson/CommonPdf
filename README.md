@@ -9,18 +9,18 @@ example AWS Lambda usage [CommonPdf Example](https://github.com/corymickelson/Co
 ## API
 
 - concat
-- fillform
+- fillform (Pdftk only)
 - rotate
 - stamp
-- digital signing (x509 certificate)
+- digital signing
 
 ## Getting Started
 All required binaries are provided in the bin directory (binaries are for linux). You may use what is provided
 or install separately.
 
 Self Install:
-- Install [pdftk](https://www.pdflabs.com/tools/pdftk-server/) and put on your path
-- Install [PortableSigner](http://portablesigner.sourceforge.net/) and put on your path
+- Install [pdftk](https://www.pdflabs.com/tools/pdftk-server/) and put on your $PATH
+- Install [PoDoFo](http://podofo.sourceforge.net/download) and place on your $PATH
 
 Or use bin (AWS Lambda Only!)
 
@@ -55,6 +55,7 @@ exploring the .spec.js files in the /src directory will provide working examples
 Concat accepts an array of pdf file paths. Concat can also be used to split a document. Given a single Pdf input
  define optional parameter ```Array<{start:number, end:number|string}>``` 
 ```javascript
+/* eslint-disable*/
 const Concat = require( 'commonpdf' ).Concat,
     pdfs = ['fileA.pdf', 'fileB.pdf'],
     opts = '/outfile.pdf' 
@@ -116,11 +117,11 @@ new Rotate(pdf, pageNumber, config)
 ```
 
 #### Signing:
-CommonPdf DigitalSignature is just a wrapper around the command line PortableSigner java library.
-Signing requires an x509 certificate is provided. To create your own self signed x509:
+CommonPdf Sign creates a non-visible (no image yet) digital signature. Signing is performed with PoDoFo,
+Signing requires a cert and key is provided. To create your own self signed x509:
 1. `openssl genrsa -out ca.key 4096`
 2. `openssl req -new -x509 -days 1826 -key ca.key -out ca.crt`
-3. `openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt`
+3. ~~openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt~~
 
 Click [here](https://blog.didierstevens.com/2008/12/30/howto-make-your-own-cert-with-openssl/) for further information 
 on creating your own certificate.
@@ -128,23 +129,12 @@ on creating your own certificate.
 
 
 ## Todo
- - contributor details
- - add complete list of command line parameter options
- - add options documentation
+ - swap pdftk with podofo
  - improve README
  - better error handling, human readable error messages
  - when digitally signing a document, add option to pass in password to prevent invalidating previous signature
      - with pdftk `pdftk in.pdf output out.pdf owner_pw PASSWORD-HERE`
      - with qpdf `qpdf --password=PASSWORD-HERE --decrypt in.pdf out.pdf`
-## Run as Lambda
-
-Create a zip with
-
-```
-./dist.sh
-```
-
-Then, simply upload this ZIP to AWS Lambda
 
 ## How it Works
 AWS Lambda supports binary dependencies by allowing them to be included in uploaded ZIP files. However, because Amazon Linux does not support PDFtk or GCJ, PDFtk was built from source in CentOS, a close relative of Amazon Linux. I spun up a CentOS 6 machine in EC2 and followed the instructions on the [PDFtk website](https://www.pdflabs.com/docs/install-pdftk-on-redhat-or-centos/) to build PDFtk from source. 
@@ -186,4 +176,11 @@ exports.handler = function handler (event, context) {
 	exec('pdftk --version', context.done);
 };
 ```
+## Building PoDoFo for AWS Linux(Centos7)
+
+install deps:
+sudo yum update
+sudo yum install openssl-devel libidn-devel libjpeg-turbo-devel libtiff-devel libpng-devel lua-devel freetype-devel fontconfig-devel cppunit-devel wget clang
+Build cmake from source. The current latest version of cmake on centos(and amazon linux) is 2.8
+
 

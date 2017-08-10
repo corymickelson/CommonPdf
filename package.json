@@ -1,25 +1,21 @@
 {
   "name": "commonpdf",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Pdf utility library",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "tape ./src/**.spec.js",
     "lint": "eslint .",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "include": "./bin/include.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/corymickelson/CommonPdf.git"
-  },
+  "repository": "git+https://github.com/corymickelson/CommonPdf.git",
   "engines": {
     "node": "^4.3.2"
   },
   "keywords": [
-    "pdf",
-    "pdftk",
-    "pdfkit"
+    "pdf"
   ],
   "author": "Cory Mickelson <mickelsoncory@gmail.com> (http://corymickelson.github.io/)",
   "license": "MIT",
@@ -29,6 +25,7 @@
   "homepage": "https://github.com/corymickelson/CommonPdf#readme",
   "devDependencies": {
     "@types/node": "^7.0.8",
+    "@types/tape": "^4.2.30",
     "@types/uuid": "^2.0.29",
     "eslint": "^3.12.2",
     "eslint-plugin-jsdoc": "^2.4.0",
@@ -42,5 +39,7 @@
     "uuid": "^3.0.1"
   },
   "pre-commit": [
+    "lint",
+    "test"
   ]
 }

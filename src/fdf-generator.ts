@@ -1,9 +1,9 @@
 'use strict'
-import { join } from "path";
+import {join} from "path";
 import {existsSync, writeFile} from 'fs'
-import { v4 as id } from 'uuid'
-import { exec } from 'child_process'
-import { FilePath } from "../index";
+import {v4 as id} from 'uuid'
+import {exec} from 'child_process'
+import {FilePath} from "../index";
 
 export type FDFField = { fieldname: string, fieldvalue: string | number | boolean }
 export type FDFFieldsMap = Array<FDFField>
@@ -92,7 +92,7 @@ export class FDFGenerator {
 		return new Promise( ( fulfill, reject ) => {
 			exec( `pdftk ${pdf} dump_data_fields`, ( err, stdout, stderr ) => {
 				if ( err ) reject( err )
-				if ( stdout === '' ) fulfill( [] )
+				if ( stdout === '' ) fulfill( null )
 				fulfill( stdout.split( '---' )
 					.filter( i => i.length > 3 )
 					.reduce( ( accum, item, index ) => {
@@ -109,7 +109,7 @@ export class FDFGenerator {
 							accum.push( field )
 							return accum
 						}
-					}, [] ) )
+					}, [] as [FieldAnnotations] ) )
 			} )
 		} )
 	}

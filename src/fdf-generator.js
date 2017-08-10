@@ -83,7 +83,7 @@ class FDFGenerator {
                 if (err)
                     reject(err);
                 if (stdout === '')
-                    fulfill([]);
+                    fulfill(null);
                 fulfill(stdout.split('---')
                     .filter(i => i.length > 3)
                     .reduce((accum, item, index) => {

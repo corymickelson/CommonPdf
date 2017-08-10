@@ -9,7 +9,6 @@ const child_process_1 = require("child_process");
 const concat_1 = require("./concat");
 const assert = require("assert");
 const fs_1 = require("fs");
-const digital_signature_1 = require("./digital-signature");
 test('Concat', t => {
     let output;
     new concat_1.Concat([
@@ -127,8 +126,11 @@ test('Concat and split', t => {
 test('Concat with password. Given a signed document, and the signed documents certificate password, Concat will return' +
     'the modified document with a valid certificate', t => {
     let certifiedPdf = path_1.join(__dirname, '../test-data/fw9.signed.pdf'), concatOpts = [{ start: 1, end: 1 }, { start: 4, end: 'end' }], signOpts = {
-        encrypt: digital_signature_1.DigitalSignatureOption.Inline,
-        config: { options: { passwd: '123456' } }
+        reason: 'SkySlope',
+        cert: path_1.join(__dirname, '../test-data/ca.cert'),
+        key: path_1.join(__dirname, '../test-data/ca.key')
+        /*			encrypt: DigitalSignatureOption.Inline,
+                    config: { options: { passwd: '123456' } }*/
     }, output;
     new concat_1.Concat([certifiedPdf], concatOpts, signOpts)
         .write()
@@ -148,15 +150,9 @@ test('Concat with password. Given a signed document, and the signed documents ce
 });
 test('Concat optional post process digital signature returns a newly signed document.', t => {
     let unsignedPdf = path_1.join(__dirname, '../test-data/fw9.pdf'), concatOpts = [{ start: 1, end: 1 }, { start: 4, end: 'end' }], signOpts = {
-        encrypt: digital_signature_1.DigitalSignatureOption.Post,
-        config: {
-            certificate: path_1.join(__dirname, '../test-data/test-cert.pfx'),
-            options: {
-                passwd: '123456',
-                location: '825 K Street, Sacramento CA',
-                reason: 'Testing'
-            }
-        }
+        reason: 'SkySlope',
+        cert: path_1.join(__dirname, '../test-data/ca.cert'),
+        key: path_1.join(__dirname, '../test-data/ca.key')
     }, output;
     new concat_1.Concat([unsignedPdf], concatOpts, signOpts)
         .write()
@@ -180,6 +176,7 @@ test('Concat optional post process digital signature returns a newly signed docu
             .then(_ => {
             t.end();
         });
-    });
+    })
+        .catch(e => t.end(e));
 });
 //# sourceMappingURL=concat.spec.js.map
