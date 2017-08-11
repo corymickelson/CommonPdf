@@ -11,9 +11,6 @@
     "include": "./bin/include.js"
   },
   "repository": "git+https://github.com/corymickelson/CommonPdf.git",
-  "engines": {
-    "node": "^4.3.2"
-  },
   "keywords": [
     "pdf"
   ],
