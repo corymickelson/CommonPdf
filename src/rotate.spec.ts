@@ -10,7 +10,7 @@ import {exec} from 'child_process'
 
 test( 'rotate first page.', t => {
 	t.plan( 2 )
-	let source = join( __dirname, '../test-data/fw9.pdf' ),
+	let source = join( __dirname, '../node_modules/commonpdf_testfiles/fw9.pdf' ),
 		target = 1,
 		opts = { direction: 'east' }
 	new Subject( source, target, opts )
@@ -27,7 +27,7 @@ test( 'rotate first page.', t => {
 } )
 test( 'rotate second page.', t => {
 	t.plan( 4 )
-	let source = join( __dirname, '../test-data/fw9.pdf' ),
+	let source = join( __dirname, '../node_modules/commonpdf_testfiles/fw9.pdf' ),
 		target = 2,
 		opts = { direction: 'east' }
 	new Subject( source, target, opts )
@@ -46,7 +46,7 @@ test( 'rotate second page.', t => {
 } )
 test( 'rotate last page.', t => {
 	t.plan( 3 )
-	let source = join( __dirname, '../test-data/fw9.pdf' ),
+	let source = join( __dirname, '../node_modules/commonpdf_testfiles/fw9.pdf' ),
 		target = 4,
 		opts = { direction: 'east' }
 	new Subject( source, target, opts )

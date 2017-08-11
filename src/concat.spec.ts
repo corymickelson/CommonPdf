@@ -16,9 +16,9 @@ import {FilePath} from "../index";
 test('Concat', t => {
     let output: string
     new Subject([
-        join(__dirname, '../test-data/IntelliJIDEA_ReferenceCard.pdf'),
-        join(__dirname, '../test-data/de542.pdf'),
-        join(__dirname, '../test-data/fw9.pdf')])
+        join(__dirname, '../node_modules/commonpdf_testfiles/IntelliJIDEA_ReferenceCard.pdf'),
+        join(__dirname, '../node_modules/commonpdf_testfiles/de542.pdf'),
+        join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf')])
         .write()
         .then(outFile => {
             output = outFile
@@ -44,7 +44,7 @@ test('Concat', t => {
 })
 test('Split', t => {
     let output: string
-    new Subject([join(__dirname, '../test-data/fw9.pdf')], [{
+    new Subject([join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf')], [{
         start: 1,
         end: 2
     }, {
@@ -77,7 +77,7 @@ test('Split', t => {
 })
 test('Split 1-1', t => {
     let output: string
-    new Subject([join(__dirname, '../test-data/fw9.pdf')], [{
+    new Subject([join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf')], [{
         start: 1,
         end: 1
     }, {
@@ -110,7 +110,7 @@ test('Split 1-1', t => {
 })
 test('Concat and split', t => {
     t.equal(assert.throws(() => {
-        new Subject([join(__dirname, '../test-data/fw9.pdf'), join(__dirname, '../test-data/de542.pdf')], [{
+        new Subject([join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf'), join(__dirname, '../node_modules/commonpdf_testfiles/de542.pdf')], [{
             start: 1,
             end: 1
         }, {
@@ -123,12 +123,12 @@ test('Concat and split', t => {
 test('Concat with password. Given a signed document, and the signed documents certificate password, Concat will return' +
     'the modified document with a valid certificate', t => {
 
-    let certifiedPdf = join(__dirname, '../test-data/fw9.signed.pdf'),
+    let certifiedPdf = join(__dirname, '../node_modules/commonpdf_testfiles/fw9.signed.pdf'),
         concatOpts = [{start: 1, end: 1}, {start: 4, end: 'end'}],
         signOpts: SignOptions & { cert: FilePath, key: FilePath } = {
             reason: 'SkySlope',
-            cert: join(__dirname, '../test-data/ca.cert'),
-            key: join(__dirname, '../test-data/ca.key')
+            cert: join(__dirname, '../node_modules/commonpdf_testfiles/ca.cert'),
+            key: join(__dirname, '../node_modules/commonpdf_testfiles/ca.key')
             /*			encrypt: DigitalSignatureOption.Inline,
                         config: { options: { passwd: '123456' } }*/
         },
@@ -150,12 +150,12 @@ test('Concat with password. Given a signed document, and the signed documents ce
         })
 })
 test('Concat optional post process digital signature returns a newly signed document.', t => {
-    let unsignedPdf = join(__dirname, '../test-data/fw9.pdf'),
+    let unsignedPdf = join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf'),
         concatOpts = [{start: 1, end: 1}, {start: 4, end: 'end'}],
         signOpts: SignOptions & { cert: FilePath, key: FilePath } = {
             reason: 'SkySlope',
-            cert: join(__dirname, '../test-data/ca.cert'),
-            key: join(__dirname, '../test-data/ca.key')
+            cert: join(__dirname, '../node_modules/commonpdf_testfiles/ca.cert'),
+            key: join(__dirname, '../node_modules/commonpdf_testfiles/ca.key')
         },
         output: string
     new Subject([unsignedPdf], concatOpts, signOpts)

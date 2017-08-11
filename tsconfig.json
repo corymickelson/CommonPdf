@@ -9,11 +9,11 @@
       "es2015",
       "es2015.promise",
       "es2015.collection",
-      "es6"
+      "es6",
+      "es2016.array.include"
     ],
     "typeRoots": [
-      "node_modules/@types",
-      "node_modules/@types/uuid"
+      "node_modules/@types"
     ]
   },
   "exclude": [

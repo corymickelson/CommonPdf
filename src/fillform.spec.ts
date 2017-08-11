@@ -3,7 +3,7 @@ import * as test from 'tape'
 import {FDFGenerator as Subject, PdfData} from './fdf-generator'
 import {FillForm} from './fillform'
 
-const pdfFile =  '../test-data/fw9.pdf'
+const pdfFile =  '../node_modules/commonpdf_testfiles/fw9.pdf'
 
 test( 'Name, Business Name, S Corp, and Partnership', t => {
 	const fieldValues = [

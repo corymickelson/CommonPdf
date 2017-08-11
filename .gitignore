@@ -7,3 +7,8 @@ config.json
 typings
 test-data
 pdfs
+.jshintignore
+.jshintrc
+**.js.map
+**.d.ts
+

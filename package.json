@@ -27,6 +27,7 @@
     "@types/node": "^7.0.8",
     "@types/tape": "^4.2.30",
     "@types/uuid": "^2.0.29",
+    "commonpdf_testfiles": "0.0.0",
     "eslint": "^3.12.2",
     "eslint-plugin-jsdoc": "^2.4.0",
     "precommit-hook": "3.0.0",
@@ -36,7 +37,9 @@
   },
   "dependencies": {
     "pdfkit": "^0.8.0",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "commonpdf_pdftk": "0.0.0",
+    "commonpdf_podofo": "0.0.0"
   },
   "pre-commit": [
     "lint",

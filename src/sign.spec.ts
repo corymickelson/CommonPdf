@@ -6,9 +6,9 @@ import {FieldAnnotations, PdfData} from './fdf-generator'
 
 test('Digital Signature (PoDoFo)', async t => {
     const signer = new Sign(
-        join(__dirname, '../test-data/de542.pdf'),
-        join(__dirname, '../test-data/ca.cert'),
-        join(__dirname, '../test-data/ca.key'),
+        join(__dirname, '../node_modules/commonpdf_testfiles/de542.pdf'),
+        join(__dirname, '../node_modules/commonpdf_testfiles/ca.cert'),
+        join(__dirname, '../node_modules/commonpdf_testfiles/ca.key'),
         {reason: 'SkySlope'})
 
     let output = await signer.write(),
