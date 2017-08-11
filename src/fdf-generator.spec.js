@@ -75,7 +75,9 @@ test('Throws exception on mismatched inputs', t => {
     //t.equal(assert.throws(() => {FDFGenerator._validate()}), undefined, 'Assert an exception has been thrown')
 });
 test('throws exception on invalid constructor arguments', t => {
-    t.equal(assert.throws(function () { Subject._constructorValidations('no', null); }), undefined, 'Assert an exception has been thrown');
+    t.equal(assert.throws(function () {
+        Subject._constructorValidations('no', null);
+    }), undefined, 'Assert an exception has been thrown');
     t.end();
 });
 //# sourceMappingURL=fdf-generator.spec.js.map

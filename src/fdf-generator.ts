@@ -1,9 +1,9 @@
 'use strict'
-import {join} from "path";
-import {existsSync, writeFile} from 'fs'
-import {v4 as id} from 'uuid'
-import {exec} from 'child_process'
-import {FilePath} from "../index";
+import { join } from "path";
+import { existsSync, writeFile } from 'fs'
+import { v4 as id } from 'uuid'
+import { exec } from 'child_process'
+import { FilePath } from "../index";
 
 export type FDFField = { fieldname: string, fieldvalue: string | number | boolean }
 export type FDFFieldsMap = Array<FDFField>
@@ -15,6 +15,7 @@ export type FieldAnnotations = {
 	FieldStateOption?: string | number,
 	FieldMaxLength?: number
 }
+
 export class FDFGenerator {
 	public pdf: string
 	public out: string
@@ -66,11 +67,11 @@ export class FDFGenerator {
 	}
 
 	private _write( fdfMap: FDFFieldsMap ): Promise<FilePath> {
-		let lines = [ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ].join( '\n')
+		let lines = [ this.header, ...fdfMap.map( f => FDFGenerator._fieldWriter( f ) ), this.footer ].join( '\n' )
 		return new Promise<string>( ( fulfill, reject ) => {
-			writeFile( this.out, lines, {encoding: 'utf8'}, (err:Error) => {
-					err ? reject( err ) : fulfill( this.out )
-				} )
+			writeFile( this.out, lines, { encoding: 'utf8' }, ( err: Error ) => {
+				err ? reject( err ) : fulfill( this.out )
+			} )
 		} )
 	}
 
@@ -92,7 +93,7 @@ export class FDFGenerator {
 		return new Promise( ( fulfill, reject ) => {
 			exec( `pdftk ${pdf} dump_data_fields`, ( err, stdout, stderr ) => {
 				if ( err ) reject( err )
-				if ( stdout === '' ) fulfill( [] as [FieldAnnotations] )
+				if ( stdout === '' ) fulfill( [] as [ FieldAnnotations ] )
 				fulfill( stdout.split( '---' )
 					.filter( i => i.length > 3 )
 					.reduce( ( accum, item, index ) => {
@@ -109,7 +110,7 @@ export class FDFGenerator {
 							accum.push( field )
 							return accum
 						}
-					}, [] as [FieldAnnotations] ) )
+					}, [] as [ FieldAnnotations ] ) )
 			} )
 		} )
 	}

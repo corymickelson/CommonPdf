@@ -1,9 +1,9 @@
 'use strict'
 import * as test from 'tape'
-import {FDFGenerator as Subject, PdfData} from './fdf-generator'
-import {FillForm} from './fillform'
+import { FDFGenerator as Subject, PdfData } from './fdf-generator'
+import { FillForm } from './fillform'
 
-const pdfFile =  '../node_modules/commonpdf_testfiles/fw9.pdf'
+const pdfFile = '../node_modules/commonpdf_testfiles/fw9.pdf'
 
 test( 'Name, Business Name, S Corp, and Partnership', t => {
 	const fieldValues = [
@@ -38,8 +38,8 @@ test( 'Name, Business Name, S Corp, and Partnership', t => {
 			t.plan( fieldValues.length )
 			fieldValues.map( v => {
 				let field = data.find( x => x[ 'FieldName' ] === v.fieldname )
-				if( typeof v.fieldvalue === 'boolean' ) {
-					if( v.fieldvalue ) t.equal( field[ 'FieldValue' ], field[ 'FieldStateOption' ] )
+				if ( typeof v.fieldvalue === 'boolean' ) {
+					if ( v.fieldvalue ) t.equal( field[ 'FieldValue' ], field[ 'FieldStateOption' ] )
 					else t.equal( field[ 'FieldValue' ], 0 )
 				}
 				else t.equal( field[ 'FieldValue' ], v.fieldvalue )
@@ -68,16 +68,16 @@ test( 'Name, Business Name, S Corp, and Partnership, flatten', t => {
 		FDFGenerator = new Subject( pdfFile, fieldValues )
 	FDFGenerator.write()
 		.then( fdf => {
-			let fillForm = new FillForm( fdf, pdfFile, ['flatten'] )
+			let fillForm = new FillForm( fdf, pdfFile, [ 'flatten' ] )
 			return fillForm.write()
 		} )
 		.then( pdf => {
-			t.ok(pdf)
+			t.ok( pdf )
 			return PdfData( pdf )
 		} )
 		.then( data => {
-			t.equal(data.length, 0)
-            t.end()
+			t.equal( data.length, 0 )
+			t.end()
 		} )
-		.catch(e => t.end(e))
+		.catch( e => t.end( e ) )
 } )

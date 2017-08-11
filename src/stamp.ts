@@ -12,6 +12,7 @@ import { basename } from "path";
 
 
 export type ImgOpts = { x: number, y: number, width: number, height: number, uri: string }
+
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
  *
