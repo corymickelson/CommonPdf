@@ -9,7 +9,7 @@ const path_1 = require("path");
 const child_process_1 = require("child_process");
 test('rotate first page.', t => {
     t.plan(2);
-    let source = path_1.join(__dirname, '../test-data/fw9.pdf'), target = 1, opts = { direction: 'east' };
+    let source = path_1.join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf'), target = 1, opts = { direction: 'east' };
     new rotate_1.Rotate(source, target, opts)
         .write()
         .then(out => {
@@ -25,7 +25,7 @@ test('rotate first page.', t => {
 });
 test('rotate second page.', t => {
     t.plan(4);
-    let source = path_1.join(__dirname, '../test-data/fw9.pdf'), target = 2, opts = { direction: 'east' };
+    let source = path_1.join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf'), target = 2, opts = { direction: 'east' };
     new rotate_1.Rotate(source, target, opts)
         .write()
         .then(out => {
@@ -43,7 +43,7 @@ test('rotate second page.', t => {
 });
 test('rotate last page.', t => {
     t.plan(3);
-    let source = path_1.join(__dirname, '../test-data/fw9.pdf'), target = 4, opts = { direction: 'east' };
+    let source = path_1.join(__dirname, '../node_modules/commonpdf_testfiles/fw9.pdf'), target = 4, opts = { direction: 'east' };
     new rotate_1.Rotate(source, target, opts)
         .write()
         .then(out => {

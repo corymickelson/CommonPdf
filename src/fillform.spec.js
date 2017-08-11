@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const test = require("tape");
 const fdf_generator_1 = require("./fdf-generator");
 const fillform_1 = require("./fillform");
-const pdfFile = '../test-data/fw9.pdf';
+const pdfFile = '../node_modules/commonpdf_testfiles/fw9.pdf';
 test('Name, Business Name, S Corp, and Partnership', t => {
     const fieldValues = [
         {
@@ -65,7 +65,6 @@ test('Name, Business Name, S Corp, and Partnership, flatten', t => {
             fieldvalue: true
         }
     ], FDFGenerator = new fdf_generator_1.FDFGenerator(pdfFile, fieldValues);
-    t.plan(2);
     FDFGenerator.write()
         .then(fdf => {
         let fillForm = new fillform_1.FillForm(fdf, pdfFile, ['flatten']);
@@ -77,6 +76,8 @@ test('Name, Business Name, S Corp, and Partnership, flatten', t => {
     })
         .then(data => {
         t.equal(data.length, 0);
-    });
+        t.end();
+    })
+        .catch(e => t.end(e));
 });
 //# sourceMappingURL=fillform.spec.js.map

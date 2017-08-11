@@ -109,7 +109,7 @@ export class FDFGenerator {
 							accum.push( field )
 							return accum
 						}
-					}, [] as [FieldAnnotations]) )
+					}, [] as [FieldAnnotations] ) )
 			} )
 		} )
 	}

@@ -229,5 +229,6 @@
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
-  }
+  },
+  "ignore": ["README.md"]
 }

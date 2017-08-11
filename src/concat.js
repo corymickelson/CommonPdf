@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
 const uuid_1 = require("uuid");
 const fs = require("fs");
-const digital_signature_1 = require("./digital-signature");
+const sign_1 = require("./sign");
 class Concat {
     constructor(docs, options, signOpts, outfile) {
         this.docs = docs;
@@ -39,26 +39,20 @@ class Concat {
             throw new Error('Can not concat and split. Try, concatenating first, and splitting afterwards.');
         this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4()}.pdf`;
         if (signOpts) {
-            if (signOpts.encrypt === digital_signature_1.DigitalSignatureOption.Inline) {
-                this.signInline = true;
-                this.password = signOpts.config.options.passwd;
-            }
-            else {
-                this.postProcessSigning = true;
-            }
+            this.postProcessSigning = true;
         }
     }
     write() {
         return __awaiter(this, void 0, void 0, function* () {
-            let secure = this.signInline ? `owner_pw ${this.password}` : '', output = this.postProcessSigning ? `${this.out.substr(0, this.out.length - 4)}.unsigned.pdf` : this.out, command = `pdftk ${this.docs.join(' ')} cat ${this.options.join(" ")} output ${output} ${secure}`;
+            //let secure = this.signInline ? `owner_pw ${this.password}` : '',
+            let output = this.postProcessSigning ? `${this.out.substr(0, this.out.length - 4)}.unsigned.pdf` : this.out, command = `pdftk ${this.docs.join(' ')} cat ${this.options.join(" ")} output ${output}`; // ${secure}`
             yield new Promise((fulfill, reject) => {
                 child_process_1.exec(command, { shell: '/bin/sh' }, (error, stdout, stderr) => {
                     error || stderr ? reject(error) : fulfill(output);
                 });
             });
             if (this.postProcessSigning) {
-                yield new digital_signature_1.DigitalSignature(output, this.signOpts.config.certificate, this.signOpts.config.options, this.out)
-                    .write();
+                yield new sign_1.Sign(output, this.signOpts.cert, this.signOpts.key, this.signOpts, this.out).write();
             }
             return this.out;
         });

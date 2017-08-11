@@ -1,8 +1,9 @@
-import { FilePath } from "commonpdf";
-import { v4 as id } from 'uuid'
-import { join } from "path";
-import { existsSync } from "fs";
-import { exec } from "child_process";
+import {FilePath} from "../index";
+import {v4 as id} from 'uuid'
+import {join} from "path";
+import {existsSync} from "fs";
+import {exec} from "child_process";
+
 /**
  * Created by skyslope on 4/12/17.
  */

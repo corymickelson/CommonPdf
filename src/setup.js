@@ -8,27 +8,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = require("child_process");
-/**
- * Created by skyslope on 4/7/17.
- */
-function wrap(command) {
-    return new Promise((fulfill, reject) => {
-        child_process_1.exec(command, (err, stderr, stdout) => {
-            err ? reject(err) : fulfill(stdout);
+const path_1 = require("path");
+const fs_1 = require("fs");
+function findCommonPdfBinaries() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const commonPdfBinaryModules = ['CommonPdf_PoDoFo', 'CommonPdf_Pdftk'], nodeModulesPath = path_1.join(__dirname, '../node_modules');
+        if (!fs_1.existsSync(nodeModulesPath)) {
+            throw Error('node modules directory not found... please run \`npm install`\ and try again.');
+        }
+        return new Promise((fulfill, reject) => {
+            fs_1.readdir(nodeModulesPath, ((err, files) => {
+                if (err)
+                    reject(err);
+                return commonPdfBinaryModules.every(m => files.includes(m));
+            }));
         });
     });
 }
 function setup() {
     return __awaiter(this, void 0, void 0, function* () {
-        Promise.all([])
-            .then(_ => {
-            process.env['PATH'] = `${process.env['PATH']}:${process.env['LAMBDA_TASK_ROOT']}/bin:${process.env['LAMBDA_TASK_ROOT']}/node_modules/commonpdf/bin`;
-            process.env['LD_LIBRARY_PATH'] = `${process.env['LAMBDA_TASK_ROOT']}/bin:${process.env['LAMBDA_TASK_ROOT']}/node_modules/commonpdf/bin`;
-        })
-            .catch(e => {
-            throw e;
-        });
+        const check = yield findCommonPdfBinaries();
+        if (!check)
+            throw Error('CommonPdf binaries not found!');
+        const commonPdfPodofo = `${process.env['LAMBDA_TASK_ROOT']}/node_modules/commonpdf_podofo`;
+        const commonPdfPdftk = `${process.env['LAMBDA_TASK_ROOT']}/node_modules/commonpdf_pdftk`;
+        process.env['PATH'] = `${process.env['PATH']}:${commonPdfPdftk}:${commonPdfPodofo}`;
+        process.env['LD_LIBRARY_PATH'] = `${commonPdfPodofo}:${commonPdfPdftk}`;
     });
 }
 exports.setup = setup;

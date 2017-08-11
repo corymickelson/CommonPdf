@@ -18,10 +18,10 @@ test('Name, Business Name, S Corp, and Partnership', t => {
             fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]',
             fieldvalue: true
         }
-    ], FDFGenerator = new Subject('../test-data/fw9.pdf', fieldValues);
+    ], FDFGenerator = new Subject('../node_modules/commonpdf_testfiles/fw9.pdf', fieldValues);
     FDFGenerator.write()
         .then(fdf => {
-        let FillForm = new _FillForm(fdf, '../test-data/fw9.pdf');
+        let FillForm = new _FillForm(fdf, '../node_modules/commonpdf_testfiles/fw9.pdf');
         FillForm.write()
             .then(pdf => {
             return pdfData(pdf);
@@ -60,7 +60,7 @@ test('Throws exception on mismatched inputs', t => {
             fieldname: 'topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]',
             fieldvalue: true
         }
-    ], FDFGenerator = new Subject('../test-data/fw9.pdf', fieldValues);
+    ], FDFGenerator = new Subject('../node_modules/commonpdf_testfiles/fw9.pdf', fieldValues);
     FDFGenerator._validate()
         .then(() => {
         console.log('here');
