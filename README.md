@@ -1,7 +1,7 @@
 # Common Pdf
 
 
-CommonPdf wraps a small subset of command line pdf utilities [ **pdftk**, **PortableSigner** ] aiming to provide performant pdf operations in node.js applications.
+CommonPdf wraps a small subset of command line pdf utilities [ **pdftk**, **PoDoFo** ] aiming to provide performant pdf operations in node.js applications.
 Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for setup are described below.
 
 example AWS Lambda usage [CommonPdf Example](https://github.com/corymickelson/CommonPdf-Example)
@@ -22,7 +22,7 @@ Self Install:
 - Install [pdftk](https://www.pdflabs.com/tools/pdftk-server/) and put on your $PATH
 - Install [PoDoFo](http://podofo.sourceforge.net/download) and place on your $PATH
 
-Or use bin (AWS Lambda Only!)
+Or use CommonPdf.setup (AWS Lambda Only!)
 
 ```javascript 
 import {setup} from "commonpdf"
@@ -55,10 +55,9 @@ exploring the .spec.js files in the /src directory will provide working examples
 Concat accepts an array of pdf file paths. Concat can also be used to split a document. Given a single Pdf input
  define optional parameter ```Array<{start:number, end:number|string}>``` 
 ```javascript
-/* eslint-disable*/
 const Concat = require( 'commonpdf' ).Concat,
     pdfs = ['fileA.pdf', 'fileB.pdf'],
-    opts = '/outfile.pdf' 
+    opts = '/outfile.pdf'
 new Concat(pdfs, opts /*optional*/)
     .write()
     .then(outfilePath => {
