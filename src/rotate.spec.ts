@@ -79,3 +79,23 @@ test( 'rotate page one of one', t => {
 			} )
 		} )
 } )
+test( 'when target page = 0, rotate the entire document', t => {
+	t.plan( 5 )
+	let source = join( __dirname, '../node_modules/commonpdf_testfiles/fw9.pdf' ),
+		target = 0,
+		opts = { direction: 'south' }
+	new Subject( source, target, opts )
+		.write()
+		.then( out => {
+			let command = `pdftk ${out} dump_data | grep -i PageMediaRotation`
+			exec( command, { shell: '/bin/sh' }, ( error, stdin, stderr ) => {
+				if ( error || stderr ) t.fail()
+				const pageData = stdin.split( '\n' ).filter( x => x.length > 0 )
+				t.equal( 4, pageData.length )
+				t.equal( parseInt( pageData[ 0 ].substr( pageData[ 0 ].indexOf( ':' ) + 2 ) ), 180 )
+				t.equal( parseInt( pageData[ 1 ].substr( pageData[ 0 ].indexOf( ':' ) + 2 ) ), 180 )
+				t.equal( parseInt( pageData[ 2 ].substr( pageData[ 0 ].indexOf( ':' ) + 2 ) ), 180 )
+				t.equal( parseInt( pageData[ 3 ].substr( pageData[ 0 ].indexOf( ':' ) + 2 ) ), 180 )
+			} )
+		} )
+} )

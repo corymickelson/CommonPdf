@@ -32,6 +32,7 @@ export class Rotate {
 			} )
 			if ( target === 1 && pageCount === 1 ) fulfill( `1${this.direction}` )
 			if ( target === 1 && pageCount > 1 ) fulfill( `1${this.direction} 2-end` )
+			if ( target === 0 && pageCount > 1 ) fulfill( `1-end${this.direction}` )
 			if ( pageCount < target ) reject( 'page out of bounds' )
 			if ( target === pageCount ) fulfill( `1-${target - 1} ${target}${this.direction}` )
 			else fulfill( `1-${target - 1} ${target}${this.direction} ${target + 1}-end` )

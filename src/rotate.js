@@ -40,6 +40,8 @@ class Rotate {
                 fulfill(`1${this.direction}`);
             if (target === 1 && pageCount > 1)
                 fulfill(`1${this.direction} 2-end`);
+            if (target === 0 && pageCount > 1)
+                fulfill(`1-end${this.direction}`);
             if (pageCount < target)
                 reject('page out of bounds');
             if (target === pageCount)
