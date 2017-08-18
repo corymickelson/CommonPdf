@@ -8,7 +8,8 @@
     "test": "tape ./src/**.spec.js",
     "lint": "eslint .",
     "validate": "npm ls",
-    "include": "./bin/include.js"
+    "include": "./bin/include.js",
+    "docs": "typedoc --mode modules --module commonjs --target es6 --exclude **/*.spec.ts --out ./docs"
   },
   "repository": "git+https://github.com/corymickelson/CommonPdf.git",
   "keywords": [
@@ -33,10 +34,10 @@
     "typescript": "^2.4"
   },
   "dependencies": {
-    "pdfkit": "^0.8.0",
-    "uuid": "^3.0.1",
     "commonpdf_pdftk": "0.0.0",
-    "commonpdf_podofo": "0.0.0"
+    "commonpdf_podofo": "0.0.0",
+    "pdfkit": "^0.8.0",
+    "uuid": "^3.0.1"
   },
   "pre-commit": [
     "lint",

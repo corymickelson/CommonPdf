@@ -11,19 +11,25 @@ import * as PDFDocument from 'pdfkit'
 import { basename } from "path";
 
 
+/**
+ * @description Image options object represents all required data to stamp an image on a pdf. Ensure that x,y coordinates are pdf coordinates (0,0 is bottom left)
+ */
 export type ImgOpts = { x: number, y: number, width: number, height: number, uri: string }
 
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
- *
- * @class Stamp
- * @borrows PDFDocument
- * @property {String} pdf
- * @property {String} image
- * @property {{x:Number, y:Number}} coordinates
- * @property {{width:Number, height:Number}} dimensions
+ * @property pdf - the path to the original pdf
+ * @property image - the image as a data uri
+ * @property coordinates - pdf coordinates
+ * @property dimensions - image dimensions
+ * @property target - the page name after the document has gone through Stamp#_burst
+ * @property out - the output file path
  */
 export class Stamp {
+	/**
+	 * @description the page name after the document has gone through burst
+	 * @see Stamp.burst
+	 */
 	public target: string
 	public out: FilePath
 
@@ -42,8 +48,9 @@ export class Stamp {
 	 * @desc Generates a new pdf with image at the provided coordinates and dimensions
 	 * @param {{x:Number, y:Number, width:Number, height:Number}} imgs -
 	 * @return {Promise<String>} -
+	 * @private
 	 */
-	_stamp( imgs: Array<ImgOpts> ): Promise<string> {
+	private _stamp( imgs: Array<ImgOpts> ): Promise<string> {
 		return new Promise( ( fulfill, reject ) => {
 			let out = `/tmp/${id()}.pdf`,
 				placeholderStampPdf = `/tmp/${id()}.pdf`,
@@ -64,14 +71,13 @@ export class Stamp {
 	 * @desc Burst file into individual pages.
 	 *       Files written to /tmp with documentId prefix
 	 *
-	 * @returns {Promise}
-	 * @private
+	 * @returns {Promise<string[]>} - list of file names, ex. page_1.pdf, page_2.pdf, etc...
 	 *
 	 * @todo: The find operation will return an error for any file without x permission in /tmp directory
 	 *        the current work around is to ignore stderr in this process.
 	 *        Trying to grep filter 'Permission denied' has not yet worked.
 	 */
-	_burst(): Promise<string[]> {
+	burst(): Promise<string[]> {
 		return new Promise( ( fulfill, reject ) => {
 			let documentId = basename( this.pdf, '.pdf' )
 			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`
@@ -89,11 +95,11 @@ export class Stamp {
 	 * @param {{width:Number, height:Number, x:Number, y:Number}} srcs - stamp positioning
 	 * @returns {Promise<String>} - output file location
 	 */
-	write( page: number, srcs: Array<ImgOpts> ): Promise<string> {
+	public write( page: number, srcs: Array<ImgOpts> ): Promise<string> {
 		let pages;
 		return new Promise( ( fulfill, reject ) => {
 			if ( !page || typeof page !== 'number' ) reject( 'Page number required.' )
-			this._burst()
+			this.burst()
 				.then( burstPages => {
 					pages = burstPages
 					let pageString = `pg_${page}.pdf`
@@ -126,6 +132,12 @@ export class Stamp {
 		} )
 	}
 
+	/**
+	 * @description Parse the page name generated from burst to an integer
+	 * @static
+	 * @param {string} page - filename
+	 * @returns {number}
+	 */
 	static pageIndex( page: string ): number {
 		let subject = page.split( "_" )[ 1 ]
 		return parseInt( subject ) - 1

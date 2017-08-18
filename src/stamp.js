@@ -11,13 +11,12 @@ const PDFDocument = require("pdfkit");
 const path_1 = require("path");
 /**
  * @desc Given a position and dimensions add the provided image to the provided pdf
- *
- * @class Stamp
- * @borrows PDFDocument
- * @property {String} pdf
- * @property {String} image
- * @property {{x:Number, y:Number}} coordinates
- * @property {{width:Number, height:Number}} dimensions
+ * @property pdf - the path to the original pdf
+ * @property image - the image as a data uri
+ * @property coordinates - pdf coordinates
+ * @property dimensions - image dimensions
+ * @property target - the page name after the document has gone through Stamp#_burst
+ * @property out - the output file path
  */
 class Stamp {
     /**
@@ -35,6 +34,7 @@ class Stamp {
      * @desc Generates a new pdf with image at the provided coordinates and dimensions
      * @param {{x:Number, y:Number, width:Number, height:Number}} imgs -
      * @return {Promise<String>} -
+     * @private
      */
     _stamp(imgs) {
         return new Promise((fulfill, reject) => {
@@ -56,14 +56,13 @@ class Stamp {
      * @desc Burst file into individual pages.
      *       Files written to /tmp with documentId prefix
      *
-     * @returns {Promise}
-     * @private
+     * @returns {Promise<string[]>} - list of file names, ex. page_1.pdf, page_2.pdf, etc...
      *
      * @todo: The find operation will return an error for any file without x permission in /tmp directory
      *        the current work around is to ignore stderr in this process.
      *        Trying to grep filter 'Permission denied' has not yet worked.
      */
-    _burst() {
+    burst() {
         return new Promise((fulfill, reject) => {
             let documentId = path_1.basename(this.pdf, '.pdf');
             let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`;
@@ -85,7 +84,7 @@ class Stamp {
         return new Promise((fulfill, reject) => {
             if (!page || typeof page !== 'number')
                 reject('Page number required.');
-            this._burst()
+            this.burst()
                 .then(burstPages => {
                 pages = burstPages;
                 let pageString = `pg_${page}.pdf`;
@@ -117,6 +116,12 @@ class Stamp {
             });
         });
     }
+    /**
+     * @description Parse the page name generated from burst to an integer
+     * @static
+     * @param {string} page - filename
+     * @returns {number}
+     */
     static pageIndex(page) {
         let subject = page.split("_")[1];
         return parseInt(subject) - 1;
