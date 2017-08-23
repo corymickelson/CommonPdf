@@ -30,14 +30,8 @@ export type ImgOverlay = {
 }
 
 /**
- * @desc Given a position and dimensions add the provided image to the provided pdf
- * @property pdf - the path to the original pdf
- * @property image - the image as a data uri
- * @property coordinates - pdf coordinates
- * @property dimensions - image dimensions
- * @property target - the page name after the document has gone through Stamp#_burst
- * @property out - the output file path
- * @property contract - data contract of the stamping service
+ * @desc Stamp creates a new transparent pdf with the images at the provided locations, and stamps the
+ *        original pdf once.
  */
 export class Stamp {
 	/**
