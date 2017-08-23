@@ -17,16 +17,17 @@ const path_1 = require("path");
  * @property dimensions - image dimensions
  * @property target - the page name after the document has gone through Stamp#_burst
  * @property out - the output file path
+ * @property contract - data contract of the stamping service
  */
 class Stamp {
     /**
      *
-     * @param {String} pdf - pdf file path
+     * @param {String} contract - pdf stamping data contract
      * @param {String} [outfile] - out put file location. Defaults to /tmp
      */
-    constructor(pdf, outfile) {
-        this.pdf = pdf;
-        this.pdf = pdf;
+    constructor(contract, outfile) {
+        this.contract = contract;
+        this.pdf = contract.file;
         this.target = null;
         this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4()}.pdf`;
     }
@@ -39,9 +40,14 @@ class Stamp {
     _stamp(imgs) {
         return new Promise((fulfill, reject) => {
             let out = `/tmp/${uuid_1.v4()}.pdf`, placeholderStampPdf = `/tmp/${uuid_1.v4()}.pdf`, tmpPdf = new PDFDocument();
-            imgs.forEach(({ uri, height, width, x, y }) => {
-                tmpPdf.image(uri, x, y, { width, height });
+            imgs.forEach(({ uri, locations }) => {
+                locations.forEach(({ x, y, width, height }) => {
+                    tmpPdf.image(uri, x, y, { width, height });
+                });
             });
+            /*imgs.forEach( ( { uri, height, width, x, y } ) => {
+                tmpPdf.image( uri, x, y, { width, height } )
+            } )*/
             tmpPdf.pipe(fs_1.createWriteStream(out));
             tmpPdf.end();
             child_process_1.exec(`pdftk ${this.target} stamp ${out} output ${placeholderStampPdf}`, (error, stdout, stderr) => {
@@ -65,7 +71,7 @@ class Stamp {
     burst() {
         return new Promise((fulfill, reject) => {
             let documentId = path_1.basename(this.pdf, '.pdf');
-            let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name "${documentId}-pg_*.pdf"`;
+            let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name '${documentId}-pg_*.pdf'`;
             child_process_1.exec(command, (error, stdin, stderr) => {
                 fulfill(stdin.split('\n')
                     .filter(x => x.length > 0));
@@ -74,25 +80,22 @@ class Stamp {
     }
     /**
      * @desc Write new pdf with image stamp.
-     *
-     * @param {Number} page - page index to apply image
-     * @param {{width:Number, height:Number, x:Number, y:Number}} srcs - stamp positioning
      * @returns {Promise<String>} - output file location
      */
-    write(page, srcs) {
+    write() {
         let pages;
         return new Promise((fulfill, reject) => {
-            if (!page || typeof page !== 'number')
+            if (!this.contract.page || typeof this.contract.page !== 'number')
                 reject('Page number required.');
             this.burst()
                 .then(burstPages => {
                 pages = burstPages;
-                let pageString = `pg_${page}.pdf`;
+                let pageString = `pg_${this.contract.page}.pdf`;
                 this.target = pages.find(x => x.indexOf(pageString) !== -1);
                 return Promise.resolve();
             })
                 .then(() => {
-                return this._stamp(srcs);
+                return this._stamp(this.contract.stamps);
             })
                 .then(stampedPage => {
                 return new concat_1.Concat(pages.reduce((accum, item, index) => {
@@ -123,7 +126,7 @@ class Stamp {
      * @returns {number}
      */
     static pageIndex(page) {
-        let subject = page.split("_")[1];
+        let subject = page.split('_')[1];
         return parseInt(subject) - 1;
     }
 }
