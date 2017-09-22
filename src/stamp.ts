@@ -94,7 +94,7 @@ export class Stamp {
 	burst(): Promise<string[]> {
 		return new Promise( ( fulfill, reject ) => {
 			let documentId = basename( this.pdf, '.pdf' )
-			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name '${documentId}-pg_*.pdf'`
+			let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find -L /tmp -name '${documentId}-pg_*.pdf'`
 			exec( command, ( error, stdin, stderr ) => {
 				fulfill( stdin.split( '\n' )
 					.filter( x => x.length > 0 ) )
