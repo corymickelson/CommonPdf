@@ -65,7 +65,7 @@ class Stamp {
     burst() {
         return new Promise((fulfill, reject) => {
             let documentId = path_1.basename(this.pdf, '.pdf');
-            let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find /tmp -name '${documentId}-pg_*.pdf'`;
+            let command = `pdftk ${this.pdf} burst output /tmp/${documentId}-pg_%d.pdf && find -L /tmp -name '${documentId}-pg_*.pdf'`;
             child_process_1.exec(command, (error, stdin, stderr) => {
                 fulfill(stdin.split('\n')
                     .filter(x => x.length > 0));
