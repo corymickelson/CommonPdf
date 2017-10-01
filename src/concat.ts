@@ -19,7 +19,7 @@ export class Concat {
 	constructor( public docs: Array<FilePath>,
 				 public options?: Array<{ start: number, end: number | string }>,
 				 public signOpts?: SignOptions & { cert: FilePath, key: FilePath },
-				 outfile?: FilePath ) {
+				 outfile?: FilePath, forcetmp?: boolean ) {
 
 		this.docs = docs.map( doc => {
 			if ( !fs.existsSync( doc ) ) throw new Error( `File not found ${doc}` )
@@ -36,7 +36,8 @@ export class Concat {
 		if ( this.docs.length > 1 && this.options.length > 0 )
 			throw new Error( 'Can not concat and split. Try, concatenating first, and splitting afterwards.' )
 
-		this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
+		if ( outfile && forcetmp !== undefined && !forcetmp ) this.out = outfile
+		else this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
 
 		if ( signOpts ) {
 			this.postProcessSigning = true

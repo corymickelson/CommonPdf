@@ -41,16 +41,20 @@ export class Stamp {
 	public target: string
 	public out: FilePath
 	public pdf: FilePath
+	public forcetmp: boolean
 
 	/**
 	 *
 	 * @param {String} contract - pdf stamping data contract
 	 * @param {String} [outfile] - out put file location. Defaults to /tmp
+	 * @param {Boolean} [forcetmp] - force the outfile to /tmp if true
 	 */
-	constructor( public contract: StampContract, outfile?: FilePath ) {
+	constructor( public contract: StampContract, outfile?: FilePath, forcetmp?: boolean ) {
 		this.pdf = contract.file
-		this.target = null
-		this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id()}.pdf`
+	        this.target = null
+		this.forcetmp = (forcetmp === undefined) ? true : forcetmp
+		if ( outfile && !this.forcetmp ) this.out = outfile
+		else this.out = (outfile && outfile.substr( 0, 4 ) === '/tmp') ? outfile : `/tmp/${outfile || id() + '.pdf'}`
 	}
 
 	/**
@@ -126,7 +130,7 @@ export class Stamp {
 							targetIndex = Stamp.pageIndex( this.target )
 						accum[ pageIndex ] = pageIndex === targetIndex ? stampedPage : item
 						return accum
-					}, [] ), null, null, this.out ).write()
+					}, [] ), null, null, this.out, this.forcetmp ).write()
 				} )
 				.then( final => {
 					Promise.all( pages.map( p => unlink( p, err => {
