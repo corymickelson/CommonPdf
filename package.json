@@ -31,7 +31,7 @@
     "precommit-hook": "3.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3",
-    "typescript": "^2.4"
+    "typescript": "^2.5.3"
   },
   "dependencies": {
     "commonpdf_pdftk": "0.0.0",
