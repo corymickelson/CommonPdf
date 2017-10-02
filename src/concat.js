@@ -16,7 +16,7 @@ const uuid_1 = require("uuid");
 const fs = require("fs");
 const sign_1 = require("./sign");
 class Concat {
-    constructor(docs, options, signOpts, outfile) {
+    constructor(docs, options, signOpts, outfile, forcetmp) {
         this.docs = docs;
         this.options = options;
         this.signOpts = signOpts;
@@ -37,7 +37,10 @@ class Concat {
             this.options = [];
         if (this.docs.length > 1 && this.options.length > 0)
             throw new Error('Can not concat and split. Try, concatenating first, and splitting afterwards.');
-        this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4()}.pdf`;
+        if (outfile && forcetmp !== undefined && !forcetmp)
+            this.out = outfile;
+        else
+            this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4()}.pdf`;
         if (signOpts) {
             this.postProcessSigning = true;
         }

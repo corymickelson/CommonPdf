@@ -18,12 +18,17 @@ class Stamp {
      *
      * @param {String} contract - pdf stamping data contract
      * @param {String} [outfile] - out put file location. Defaults to /tmp
+     * @param {Boolean} [forcetmp] - force the outfile to /tmp if true
      */
-    constructor(contract, outfile) {
+    constructor(contract, outfile, forcetmp) {
         this.contract = contract;
         this.pdf = contract.file;
         this.target = null;
-        this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4()}.pdf`;
+        this.forcetmp = (forcetmp === undefined) ? true : forcetmp;
+        if (outfile && !this.forcetmp)
+            this.out = outfile;
+        else
+            this.out = (outfile && outfile.substr(0, 4) === '/tmp') ? outfile : `/tmp/${outfile || uuid_1.v4() + '.pdf'}`;
     }
     /**
      * @desc Generates a new pdf with image at the provided coordinates and dimensions
@@ -96,7 +101,7 @@ class Stamp {
                     let pageIndex = Stamp.pageIndex(item), targetIndex = Stamp.pageIndex(this.target);
                     accum[pageIndex] = pageIndex === targetIndex ? stampedPage : item;
                     return accum;
-                }, []), null, null, this.out).write();
+                }, []), null, null, this.out, this.forcetmp).write();
             })
                 .then(final => {
                 Promise.all(pages.map(p => fs_1.unlink(p, err => {
