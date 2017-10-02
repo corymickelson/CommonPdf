@@ -5,6 +5,7 @@ CommonPdf wraps a small subset of command line pdf utilities [ **pdftk**, **PoDo
 Though not necessary CommonPdf assumes execution in AWS Lambda. Instructions for setup are described below.
 
 example AWS Lambda usage [CommonPdf Example](https://github.com/corymickelson/CommonPdf-Example)
+api documentation [here](https://corymickelson.github.io/CommonPdf)
 
 ## API
 
