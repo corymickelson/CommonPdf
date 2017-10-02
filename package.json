@@ -1,6 +1,6 @@
 {
   "name": "commonpdf",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Pdf utility library",
   "main": "index.js",
   "types": "index.d.ts",
