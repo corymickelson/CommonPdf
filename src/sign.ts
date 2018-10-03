@@ -23,7 +23,7 @@ export class Sign {
         if(this.opt) {
             if(this.opt.fieldName) this.commandOpts += ` -field-name ${this.opt.fieldName}`
             if(this.opt.password) this.commandOpts += ` -password ${this.opt.password}`
-            if(this.opt.reason) this.commandOpts += ` -reason ${this.opt.reason}`
+            if(this.opt.reason) this.commandOpts += ` -reason "${this.opt.reason}"`
             if(this.opt.useExistingSignatureField) this.commandOpts += ' -field-use-existing'
         }
     }
